@@ -2,39 +2,27 @@ package model.database;
 
 import model.DomainException;
 import model.Player;
-import model.database.filecontroller.ExcelLoadSavePlayer;
-import model.database.filecontroller.LoadSaveStrategy;
-import view.observer.MoneyObserver;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 
 public class PlayerDB {
-    private HashMap<String, Player> DB;
-    private LoadSaveStrategy saveStrategy = new ExcelLoadSavePlayer();
-
-    private Collection<MoneyObserver> observers = new ArrayList<>();
+    private ArrayList<Player> DB;
 
     public PlayerDB(){
-
-        DB = new HashMap<>();
+        DB = new ArrayList<>();
     }
 
     public void addPlayer(Player p){
         if (p == null) throw new DomainException("PLAYERDB: Player cannot be null");
         else {
-            DB.put(p.getUserid(), p);
+            DB.add(p);
         }
     }
 
     public void setDB(ArrayList<Player> db){
-        if (!this.DB.isEmpty()) System.out.println("You just tried to overwrite a non empty playerDB");
+        if (this.DB == null || this.DB.isEmpty()) System.out.println("You just tried to overwrite a non empty playerDB");
         else{
-            for (Player p : db) {
-                addPlayer(p);
-            }
+            this.DB = db;
         }
     }
 
@@ -46,31 +34,9 @@ public class PlayerDB {
     }
 
     public Player getPlayer(String username){
-        return DB.get(username);
-    }
-
-    public ArrayList<Player> getPlayers(){
-        ArrayList<Player> returnList = new ArrayList<>();
-
-        Collection<Player> players =  DB.values();
-        Iterator iterator = players.iterator();
-
-        while (iterator.hasNext()){
-            returnList.add((Player) iterator.next());
+        for (Player p : DB) {
+            if (p.getUserid().equals(username)) return p;
         }
-        return returnList;
-    }
-
-    public void loadPlayers(){
-        setDB(saveStrategy.load());
-    }
-
-    public void addObserver(MoneyObserver obs){
-        observers.add(obs);
-    }
-
-    public void updateMoneyObservers(){
-        for (MoneyObserver obs : observers)
-            obs.updateMoney();
+        return null;
     }
 }

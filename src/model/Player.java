@@ -1,18 +1,10 @@
 package model;
 
-import view.observer.MoneyObserver;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class Player {
     private String firstName;
     private String lastName;
     private String userid;
     private int money;
-
-
 
     public void Player() { }
 
@@ -62,8 +54,4 @@ public class Player {
     public void addMoney(int money) {
         this.money += money;
     }
-
-
-
-
 }
