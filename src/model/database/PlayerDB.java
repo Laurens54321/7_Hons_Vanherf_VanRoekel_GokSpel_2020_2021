@@ -20,7 +20,7 @@ public class PlayerDB {
     }
 
     public void setDB(ArrayList<Player> db){
-        if (this.DB == null || this.DB.isEmpty()) System.out.println("You just tried to overwrite a non empty playerDB");
+        if (!this.DB.isEmpty()) System.out.println("You just tried to overwrite a non empty playerDB");
         else{
             this.DB = db;
         }
@@ -38,5 +38,9 @@ public class PlayerDB {
             if (p.getUserid().equals(username)) return p;
         }
         return null;
+    }
+
+    public ArrayList<Player> getPlayers(){
+        return DB;
     }
 }

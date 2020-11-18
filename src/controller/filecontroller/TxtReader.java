@@ -1,13 +1,15 @@
-package model.database;
+package controller.filecontroller;
 
 import model.DomainException;
 import model.Player;
+import model.database.Reader;
 
 import java.io.*;
+import controller.filecontroller.Writer;
 import java.util.*;
 
 
-public class TxtReader implements Reader{
+public class TxtReader implements Reader, Writer{
 
     File personenFile = new File("src/bestanden/speler.txt");
 
@@ -23,8 +25,9 @@ public class TxtReader implements Reader{
                 String[] var = s.split(",");
                 Player p = new Player(var[0], var[1], var[2], Integer.parseInt(var[3]));
                 players.add(p);
-                scannerFile.close();
+
             }
+            scannerFile.close();
         }  catch (FileNotFoundException e) {
             throw new DomainException("TXTREADER: Error reading player file", e);
         }
@@ -34,7 +37,7 @@ public class TxtReader implements Reader{
     @Override
     public void write(ArrayList<Player> players) {
         try {
-            Writer writerFile = new PrintWriter(personenFile);
+            PrintWriter writerFile = new PrintWriter(personenFile);
             for (Player p : players) {
                 writerFile.write(p.getFirstName() + "," + p.getLastName() + "," + p.getUserid() + "," + p.getMoney() + "\n");
             }
