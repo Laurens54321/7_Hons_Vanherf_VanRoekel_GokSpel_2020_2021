@@ -1,10 +1,10 @@
 package view;
 
 
+import controller.GameController;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
-import model.Player;
 import model.database.PlayerDB;
 import view.panels.GamblerOverviewPane;
 import view.panels.InstellingPane;
@@ -12,7 +12,7 @@ import view.panels.SpelVerloopPane;
 import view.panels.StatistiekPane;
 
 public class AdminMainPane extends BorderPane {
-	public AdminMainPane(PlayerDB db){
+	public AdminMainPane(GameController db){
 	    TabPane tabPane = new TabPane();
 
         SpelVerloopPane spelVerloopPane = new SpelVerloopPane();

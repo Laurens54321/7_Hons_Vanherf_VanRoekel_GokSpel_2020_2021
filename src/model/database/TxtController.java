@@ -1,6 +1,7 @@
 package model.database;
 
 import controller.filecontroller.TxtReader;
+import view.observer.PlayerObserver;
 
 
 public class TxtController implements PlayerObserver {

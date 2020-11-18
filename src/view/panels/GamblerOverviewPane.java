@@ -1,33 +1,27 @@
 package view.panels;
 
 
+import controller.GameController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 import model.Player;
 import model.database.PlayerDB;
-
-import java.util.ArrayList;
 
 
 public class GamblerOverviewPane extends GridPane{
 	private ObservableList<Player> players;
 	private TableView<Player> table;
-	private PlayerDB playerDB;
+	private GameController gameController;
 	
 	
-	public GamblerOverviewPane(PlayerDB db) {
-		playerDB = db;
+	public GamblerOverviewPane(GameController db) {
+		gameController = db;
 
 
         Label lblHeading = new Label ("Player List: ");
@@ -55,7 +49,7 @@ public class GamblerOverviewPane extends GridPane{
 	}
 
 	public void refresh(){
-		players = FXCollections.observableArrayList(playerDB.getPlayers());
+		players = FXCollections.observableArrayList(gameController.getPlayers());
 		table.setItems(players);
 		table.refresh();
 	}
