@@ -2,9 +2,7 @@ package controller;
 
 import model.Player;
 import model.database.PlayerDB;
-import model.database.TxtController;
-import view.AdminView;
-import view.GamblerView;
+import model.database.TextLoadSaveController;
 
 import java.util.ArrayList;
 
@@ -14,22 +12,6 @@ public class GameController {
 
 
     public GameController(){
-        playerDB = new PlayerDB();
-        TxtController txtController = new TxtController();
-        txtController.update(playerDB);
-
-        AdminView adminView = new AdminView(this);
-        GamblerView gamblerView = new GamblerView();
-
-
-
-
-
-
-
-
-
-
     }
 
     public PlayerDB getPlayerDB(){
@@ -42,6 +24,10 @@ public class GameController {
             currentPlayer = p;
             System.out.println("LOGGED IN | currentPlayer = " + p.getUserid());
         }
+    }
+
+    public void setPlayerDB(PlayerDB playerDB){
+        this.playerDB = playerDB;
     }
 
     public void logout(){

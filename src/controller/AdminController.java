@@ -1,23 +1,26 @@
 package controller;
 
 import model.database.PlayerDB;
+import model.database.TextLoadSaveController;
 import view.AdminView;
 import view.GamblerView;
 
 public class AdminController {
-
-    private AdminView adminView;
     private PlayerDB playerDB;
+    private AdminView adminView;
 
-    public AdminController(PlayerDB playerDB){
-        this.playerDB = playerDB;
-        playerDB.loadPlayers();
+    public AdminController(){
+        playerDB = new PlayerDB();
+        TextLoadSaveController textLoadSaveController = new TextLoadSaveController();
+        textLoadSaveController.update(playerDB);
 
         GameController gameController = new GameController();
         gameController.setPlayerDB(playerDB);
 
         adminView = new AdminView();
         adminView.setBorderPane(gameController);
+        GamblerView gamblerView = new GamblerView();
     }
 
 }
+
