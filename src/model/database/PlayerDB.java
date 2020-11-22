@@ -4,25 +4,30 @@ import model.DomainException;
 import model.Player;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class PlayerDB {
-    private ArrayList<Player> DB;
+    private HashMap<String, Player> DB;
 
     public PlayerDB(){
-        DB = new ArrayList<>();
+        DB = new HashMap<>();
     }
 
     public void addPlayer(Player p){
         if (p == null) throw new DomainException("PLAYERDB: Player cannot be null");
         else {
-            DB.add(p);
+            DB.put(p.getUserid(), p);
         }
     }
 
     public void setDB(ArrayList<Player> db){
         if (!this.DB.isEmpty()) System.out.println("You just tried to overwrite a non empty playerDB");
         else{
-            this.DB = db;
+            for (Player p : db) {
+                addPlayer(p);
+            }
         }
     }
 
@@ -34,13 +39,18 @@ public class PlayerDB {
     }
 
     public Player getPlayer(String username){
-        for (Player p : DB) {
-            if (p.getUserid().equals(username)) return p;
-        }
-        return null;
+        return DB.get(username);
     }
 
     public ArrayList<Player> getPlayers(){
-        return DB;
+        ArrayList<Player> returnList = new ArrayList<>();
+
+        Collection<Player> players =  DB.values();
+        Iterator iterator = players.iterator();
+
+        while (iterator.hasNext()){
+            returnList.add((Player) iterator.next());
+        }
+        return returnList;
     }
 }
