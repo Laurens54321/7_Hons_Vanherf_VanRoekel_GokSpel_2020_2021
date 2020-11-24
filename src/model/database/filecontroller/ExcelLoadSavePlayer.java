@@ -19,6 +19,7 @@ public class ExcelLoadSavePlayer extends ExcelPlugin implements LoadSaveStrategy
         ArrayList<Player> returnList = new ArrayList<>();
         try{
             ArrayList<ArrayList<String>> args = read(personenFile);
+            System.out.println(args);
             for (ArrayList<String> arr : args) {
                  Player p = new Player(arr.get(0), arr.get(1), arr.get(2), Integer.parseInt(arr.get(3)));
                  returnList.add(p);

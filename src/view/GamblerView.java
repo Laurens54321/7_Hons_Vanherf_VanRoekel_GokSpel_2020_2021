@@ -17,6 +17,8 @@ public class GamblerView {
 		Scene scene = new Scene(root, 600, 600);			
 		stage.setScene(scene);
 		stage.sizeToScene();			
-		stage.show();		
+		stage.show();
+
+
 	}
 }

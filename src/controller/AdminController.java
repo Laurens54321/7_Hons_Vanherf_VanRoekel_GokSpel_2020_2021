@@ -1,7 +1,6 @@
 package controller;
 
 import model.database.PlayerDB;
-import model.database.TextLoadSaveController;
 import view.AdminView;
 import view.GamblerView;
 
@@ -11,8 +10,7 @@ public class AdminController {
 
     public AdminController(){
         playerDB = new PlayerDB();
-        TextLoadSaveController textLoadSaveController = new TextLoadSaveController();
-        textLoadSaveController.update(playerDB);
+        playerDB.loadPlayers();
 
         GameController gameController = new GameController();
         gameController.setPlayerDB(playerDB);

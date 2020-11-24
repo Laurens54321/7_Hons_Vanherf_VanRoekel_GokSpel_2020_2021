@@ -11,7 +11,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import model.Player;
-import model.database.PlayerDB;
 
 
 public class GamblerOverviewPane extends GridPane{
