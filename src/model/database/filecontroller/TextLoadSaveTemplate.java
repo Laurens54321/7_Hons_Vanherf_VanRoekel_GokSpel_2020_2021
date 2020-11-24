@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TextLoadSaveTemplate<T> {
@@ -42,8 +41,8 @@ public class TextLoadSaveTemplate<T> {
         }
     }
 
-    public ArrayList<T> readLine(){
-        ArrayList<T> lijst = new ArrayList<>();
+    public GeneriekeList<T> readLine(){
+        GeneriekeList<T> lijst = new GeneriekeList<>();
         if (file == null) return null;
         else{
             try{
@@ -51,7 +50,7 @@ public class TextLoadSaveTemplate<T> {
                     String s = scannerFile.nextLine();
                     String[] var = s.split(",");
                     for (String string : var) {
-                        lijst.add((T) string);
+                        lijst.voegToe((T) string);
                     }
                     return lijst;
                 }
@@ -74,10 +73,10 @@ public class TextLoadSaveTemplate<T> {
         }
     }
 
-    public void writeNextLine(ArrayList<T> list) {
+    public void writeNextLine(GeneriekeList<T> list) {
         try {
             if (writerFile == null ) writerFile = new PrintWriter(file);
-            for (T t : list) {
+            for (T t : list.getAll()) {
                 writerFile.write(t.toString() + ",");
             }
 

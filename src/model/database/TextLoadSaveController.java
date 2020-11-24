@@ -1,6 +1,6 @@
 package model.database;
 
-import controller.filecontroller.TextLoadSavePlayer;
+import model.database.filecontroller.TextLoadSavePlayer;
 import view.observer.PlayerObserver;
 
 
