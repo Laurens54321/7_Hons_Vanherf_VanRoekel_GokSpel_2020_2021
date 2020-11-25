@@ -10,8 +10,7 @@ public class GameController {
     Player currentPlayer;
 
 
-    public GameController(){
-    }
+    public GameController(){ }
 
     public PlayerDB getPlayerDB(){
         return playerDB;

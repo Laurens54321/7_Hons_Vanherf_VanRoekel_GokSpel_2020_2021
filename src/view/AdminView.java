@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.database.PlayerDB;
+import view.panels.AdminMainPane;
 
 public class AdminView {
 	BorderPane borderPane;

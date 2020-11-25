@@ -5,11 +5,12 @@ import view.AdminView;
 import view.GamblerView;
 
 public class AdminController {
-    private PlayerDB playerDB;
-    private AdminView adminView;
 
-    public AdminController(){
-        playerDB = new PlayerDB();
+    private AdminView adminView;
+    private PlayerDB playerDB;
+
+    public AdminController(PlayerDB playerDB){
+        this.playerDB = playerDB;
         playerDB.loadPlayers();
 
         GameController gameController = new GameController();
@@ -17,7 +18,6 @@ public class AdminController {
 
         adminView = new AdminView();
         adminView.setBorderPane(gameController);
-        GamblerView gamblerView = new GamblerView();
     }
 
 }
