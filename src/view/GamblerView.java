@@ -89,8 +89,14 @@ public class GamblerView {
 
 	public void login(String userid){
 		gamblerController.login(userid);
-		if (gamblerController.getActivePlayer() == null) gameButton.setDisable(true);
-		else gameButton.setDisable(false);
-		gamblerController.udpateMoneyDisplays();
+		if (gamblerController.getActivePlayer() != null){
+			gameButton.setDisable(false);
+			gamblerController.udpateMoneyDisplays();
+		}
+		else{
+			gameButton.setDisable(true);
+			moneyStatusLabel.setText(userid + " not found in database");
+		}
+
 	}
 }
