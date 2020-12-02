@@ -5,9 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -39,6 +37,23 @@ public class GamblerView {
 		VBox login = new VBox();
 		HBox userId = new HBox();
 		HBox bet = new HBox();
+
+		VBox strategy = new VBox();
+		Label strategyTitle = new Label();
+		strategyTitle.setText("Kies je gok strategie uit onderstaande lijst");
+		ToggleGroup radioGroup = new ToggleGroup();
+
+		RadioButton rb1 = new RadioButton("het aantal ogen bij elke worp is een even getal");
+		rb1.setToggleGroup(radioGroup);
+		rb1.setSelected(true);
+
+		RadioButton rb2 = new RadioButton("de som van de ogen van alle worpen samen is 21");
+		rb2.setToggleGroup(radioGroup);
+
+		RadioButton rb3 = new RadioButton("het aantal ogen is bij elke worp hoger dan bij de vorige worp");
+		rb3.setToggleGroup(radioGroup);
+
+		Button confirmChoice = new Button();
 
 		TextField userIdField = new TextField();
 		userIdField.setOnAction(e -> login(userIdField.getText()));
@@ -72,7 +87,10 @@ public class GamblerView {
 		login.setAlignment(Pos.TOP_LEFT);
 		login.setSpacing(10);
 
-		root.getChildren().addAll(login);
+		strategy.setPadding(new Insets(5));
+		strategy.getChildren().addAll(strategyTitle,radioGroup,confirmChoice);
+
+		root.getChildren().addAll(login,strategy);
 
 		stage.setScene(scene);
 		stage.sizeToScene();
