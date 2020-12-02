@@ -1,5 +1,5 @@
 package model.gokstrategy;
 
 public interface RequestGokStrategy {
-    public boolean evalueerGok();
+    public boolean evalueerGok(int worp);
 }

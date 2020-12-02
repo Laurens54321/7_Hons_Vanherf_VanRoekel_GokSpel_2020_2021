@@ -6,7 +6,26 @@ public enum GokStrategy {
     SOMIS21STRATEGY("Mogelijke winst is je inzet x 5", "SomIs21Strategy", 5),
     HOGERDANVORIGESTRATEGY("Mogelijke winst is je inzet x 10", "HogerDanVorigeStrategy", 10);
 
-    GokStrategy(String s, String hogerDanVorigeStrategy, int i) { }
+    private final String description;
+    private final String strategyClass;
+    private final int multiplier;
+
+    GokStrategy(String s, String strategyClass, int multiplier) {
+        this.description = s;
+        this.strategyClass = strategyClass;
+        this.multiplier = multiplier;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
 
+    public String getStrategyClass() {
+        return strategyClass;
+    }
+
+    public int getMultiplier() {
+        return multiplier;
+    }
 }

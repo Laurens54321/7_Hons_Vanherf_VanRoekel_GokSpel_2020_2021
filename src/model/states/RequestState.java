@@ -1,13 +1,8 @@
 package model.states;
 
-import model.gokstrategy.GokStrategy;
+import controller.GamblerController;
+import view.GamblerView;
 
 public interface RequestState {
-    public boolean logIn(String login);
-
-    public void selectStrategy(GokStrategy gokStrategy);
-
-    public boolean startGame(int bet);
-
-    public int throwDice();
+    public void handleState(GamblerView gamblerView);
 }

@@ -1,38 +1,14 @@
 package model.states;
 
-import controller.GamblerController;
-import model.gokstrategy.GokStrategy;
 import view.GamblerView;
 
 public class BetState implements RequestState {
-
-    GamblerController gamblerController;
-
-    public BetState(GamblerController gamblerController){
-        this.gamblerController = gamblerController;
-    }
-
-
-
     @Override
-    public boolean logIn(String login) {
-        gamblerController.setState(new BetState(gamblerController));
-        return gamblerController.login(login);
-    }
-
-    @Override
-    public void selectStrategy(GokStrategy gokStrategy) {
-
-    }
-
-    @Override
-    public boolean startGame(int bet) {
-        gamblerController.setState(new ChooseState(gamblerController));
-        return gamblerController.setActiveBet(bet);
-    }
-
-    @Override
-    public int throwDice() {
-        return -1;
+    public void handleState(GamblerView gamblerView) {
+        gamblerView.disableAllesiIsEvenButton(true);
+        gamblerView.disableSomIs21Button(true);
+        gamblerView.disableHogerDanVorigeButton(true);
+        gamblerView.disableStartGameButton(false);
+        gamblerView.disableConfirmChoiceButton(true);
     }
 }
