@@ -33,6 +33,7 @@ public class PlayerDB {
         if (!this.DB.isEmpty()) System.out.println("You just tried to overwrite a non empty playerDB");
         else{
             for (Player p : db) {
+                p.setPlayerDB(this);
                 addPlayer(p);
             }
         }
@@ -72,5 +73,9 @@ public class PlayerDB {
     public void updateMoneyObservers(){
         for (MoneyObserver obs : observers)
             obs.updateMoney();
+    }
+
+    public void save(){
+        saveStrategy.save(getPlayers());
     }
 }

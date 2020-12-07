@@ -4,10 +4,10 @@ import model.Player;
 import model.database.PlayerDB;
 import model.gokstrategy.GokStrategy;
 import model.gokstrategy.GokStrategyFactory;
-import model.gokstrategy.RequestGokStrategy;
+import model.states.BetState;
 import model.states.LogInState;
 import model.states.RequestState;
-import view.GamblerView;
+import model.states.SecondThrowState;
 import view.observer.MoneyObserver;
 
 public class GamblerController implements MoneyObserver {
@@ -61,8 +61,10 @@ public class GamblerController implements MoneyObserver {
         else {
             this.activeBet = bet;
             rollCount = 0;
+            gamblerView.disableBetField(true);
             gamblerView.disableStartGameButton(true);
             gamblerView.disableStrategyButtons(false);
+            gamblerView.setLoseMessage(false);
             return true;
         }
     }
@@ -71,6 +73,7 @@ public class GamblerController implements MoneyObserver {
         if (activePlayer.getMoney() < bet + activeBet) return false;
         else {
             this.activeBet = bet;
+            gamblerView.disableBetField(true);
             gamblerView.disableStartGameButton(true);
             return false;
         }
@@ -80,6 +83,26 @@ public class GamblerController implements MoneyObserver {
         return gokStrategyFactory.isGameOver;
     }
 
+    public void gameOver(){
+        gamblerView.disableBetField(false);
+        gamblerView.disableStartGameButton(true);
+        gamblerView.disableStrategyButtons(true);
+        gamblerView.disableThrowDiceButton(true);
+        activePlayer.addMoney(-activeBet);
+        gamblerView.setLoseMessage(true);
+        setState(new BetState(this));
+    }
+
+    public void winGame(){
+        gamblerView.disableBetField(false);
+        gamblerView.disableStartGameButton(true);
+        gamblerView.disableStrategyButtons(true);
+        gamblerView.disableThrowDiceButton(true);
+        activePlayer.addMoney(activeBet * gokStrategyFactory.getGokStrategy().getMultiplier());
+        gamblerView.setWinMessage();
+        setState(new BetState(this));
+    }
+
     public int getRollCount(){
         return rollCount;
     }
@@ -87,12 +110,20 @@ public class GamblerController implements MoneyObserver {
     public void setGokStrategy(GokStrategy gokStrategy){
         gamblerView.disableStrategyButtons(true);
         gokStrategyFactory.setGokStrategy(gokStrategy);
+        gamblerView.disableThrowDiceButton(false);
     }
 
     public int rolldice(){
         int roll = (int) (Math.random()*6);
-        gokStrategyFactory.rollDice(roll);
-        rollCount += 1;
+        if (gokStrategyFactory.rollDice(roll)){
+            gameOver();
+        }
+        else rollCount += 1;
+
+        if (isGameOver()) return -1;
+        if (getRollCount() == 1) setState(new SecondThrowState(this));
+        if (getRollCount() == 4) winGame();
+        System.out.println(rollCount);
         return roll;
     }
 
@@ -103,7 +134,7 @@ public class GamblerController implements MoneyObserver {
 
     @Override
     public void updateMoney() {
-        gamblerView.updateMoneyStatusLabel();
+        gamblerView.updateActiveBalance();
     }
 
 

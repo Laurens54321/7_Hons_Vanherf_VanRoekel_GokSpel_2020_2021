@@ -11,8 +11,9 @@ public class GokStrategyFactory {
 
     }
 
-    public void rollDice(int roll){
+    public boolean rollDice(int roll){
         this.isGameOver = !gokStrategy.evalueerGok(roll);
+        return isGameOver;
     }
 
     public void setGokStrategy(GokStrategy gokStrategy){

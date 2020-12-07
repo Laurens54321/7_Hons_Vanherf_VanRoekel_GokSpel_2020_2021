@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="bestanden1" level="project" />
     <orderEntry type="library" name="bestanden" level="project" />
+    <orderEntry type="library" name="ExcelPlugin" level="project" />
   </component>
 </module>

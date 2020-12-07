@@ -9,6 +9,7 @@ public class LogInState implements RequestState {
 
     public LogInState(GamblerController gamblerController){
         this.gamblerController = gamblerController;
+        System.out.println("Login State");
     }
 
     @Override

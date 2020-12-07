@@ -10,6 +10,7 @@ public class BetState implements RequestState {
 
     public BetState(GamblerController gamblerController){
         this.gamblerController = gamblerController;
+        System.out.println("Bet State");
     }
 
 
@@ -27,8 +28,9 @@ public class BetState implements RequestState {
 
     @Override
     public boolean startGame(int bet) {
-        gamblerController.setState(new ChooseState(gamblerController));
-        return gamblerController.setActiveBet(bet);
+        boolean success = gamblerController.setActiveBet(bet);
+        if(success) gamblerController.setState(new ChooseState(gamblerController));
+        return success;
     }
 
     @Override

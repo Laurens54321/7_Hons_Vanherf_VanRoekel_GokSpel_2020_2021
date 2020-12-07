@@ -1,5 +1,7 @@
 package model;
 
+import javafx.scene.layout.Pane;
+import model.database.PlayerDB;
 import view.observer.MoneyObserver;
 
 import java.lang.reflect.Array;
@@ -11,6 +13,8 @@ public class Player {
     private String lastName;
     private String userid;
     private int money;
+
+    private PlayerDB playerDB;
 
 
 
@@ -59,11 +63,12 @@ public class Player {
         this.money = money;
     }
 
-    public void addMoney(int money) {
+    public void addMoney(double money) {
         this.money += money;
+        playerDB.save();
     }
 
-
-
-
+    public void setPlayerDB(PlayerDB playerDB) {
+        this.playerDB = playerDB;
+    }
 }

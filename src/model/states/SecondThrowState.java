@@ -9,6 +9,7 @@ public class SecondThrowState implements RequestState{
 
     public SecondThrowState(GamblerController gamblerController){
         this.gamblerController = gamblerController;
+        System.out.println("Second Throw State");
     }
 
     @Override
@@ -31,6 +32,7 @@ public class SecondThrowState implements RequestState{
 
     @Override
     public int throwDice() {
-        return 0;
+        gamblerController.setState(new PlayState(gamblerController));
+        return gamblerController.getState().throwDice();
     }
 }

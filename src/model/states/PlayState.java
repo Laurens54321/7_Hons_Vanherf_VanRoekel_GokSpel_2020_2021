@@ -9,6 +9,7 @@ public class PlayState implements RequestState {
 
     public PlayState(GamblerController gamblerController){
         this.gamblerController = gamblerController;
+        System.out.println("Play State");
     }
 
     @Override
@@ -28,8 +29,6 @@ public class PlayState implements RequestState {
 
     @Override
     public int throwDice() {
-        if (gamblerController.isGameOver()) return -1;
-        if (gamblerController.getRollCount() == 0) gamblerController.setState(new SecondThrowState(gamblerController));
         return gamblerController.rolldice();
     }
 }

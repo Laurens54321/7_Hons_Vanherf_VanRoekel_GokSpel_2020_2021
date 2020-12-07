@@ -9,6 +9,7 @@ public class ChooseState implements RequestState{
 
     public ChooseState(GamblerController gamblerController){
         this.gamblerController = gamblerController;
+        System.out.println("Choose State");
     }
 
     @Override
