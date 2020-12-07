@@ -58,18 +58,18 @@ public class GamblerView {
 
 		Label betLabel = new Label();
 		betLabel.setText("Wat is je inzet?");
-		TextField betText = new TextField();
+		TextField betField = new TextField();
 
 		startGameButton = new Button();
 		startGameButton.setDisable(true);
 
 		startGameButton.setText("Start gokspel");
-		startGameButton.setOnAction(e -> startGame());
+		startGameButton.setOnAction(e -> startGame(Integer.parseInt(betField.getText())));
 
 		userId.getChildren().addAll(userIdLabel,userIdField, moneyStatusLabel); //je goksaldo label met var
 		userId.setSpacing(10);
 
-		bet.getChildren().addAll(betLabel,betText);
+		bet.getChildren().addAll(betLabel,betField);
 		bet.setSpacing(30);
 
 		login.getChildren().addAll(userId,bet, startGameButton);
@@ -89,15 +89,18 @@ public class GamblerView {
 		allesEvenButton = new RadioButton("het aantal ogen bij elke worp is een even getal");
 		allesEvenButton.setToggleGroup(radioGroup);
 		allesEvenButton.setOnAction(e -> setAllesIsEvenStrategy());
+		allesEvenButton.setDisable(true);
 
 
 		somIs21Button = new RadioButton("de som van de ogen van alle worpen samen is 21");
 		somIs21Button.setToggleGroup(radioGroup);
 		somIs21Button.setOnAction(e -> setSomIs21Strategy());
+		somIs21Button.setDisable(true);
 
 		hogerDanVorigeButton = new RadioButton("het aantal ogen is bij elke worp hoger dan bij de vorige worp");
 		hogerDanVorigeButton.setToggleGroup(radioGroup);
 		hogerDanVorigeButton.setOnAction(e -> setHogerDanVorigeStrategy());
+		hogerDanVorigeButton.setDisable(true);
 
 		VBox rbtns = new VBox();
 		VBox rblabels = new VBox();
@@ -120,6 +123,7 @@ public class GamblerView {
 		confirmChoiceButton = new Button();
 		confirmChoiceButton.setText("Bevestig je keuze");
 		confirmChoiceButton.setOnAction(event -> confirmStrategyChoice());
+		confirmChoiceButton.setDisable(true);
 
 		strategyChoice.getChildren().addAll(strategyTitle,strategies, confirmChoiceButton);
 		strategyChoice.setAlignment(Pos.CENTER_LEFT);
@@ -136,8 +140,9 @@ public class GamblerView {
 		stage.show();
 	}
 
-	public void startGame(){
-
+	public void startGame(int bet){
+		boolean success = gamblerController.getState().startGame(bet);
+		if (!success) moneyStatusLabel.setText("You do not have enough money to start that game");
 	}
 
 	public void updateMoneyStatusLabel(){
@@ -145,8 +150,9 @@ public class GamblerView {
 	}
 
 	public void login(String userid){
-		gamblerController.login(userid);
-		if (gamblerController.getActivePlayer() != null){
+		boolean success = gamblerController.getState().logIn(userid);
+
+		if (success){
 			startGameButton.setDisable(false);
 			gamblerController.udpateMoneyDisplays();
 		}
@@ -174,7 +180,7 @@ public class GamblerView {
 	}
 
 	private void confirmStrategyChoice(){
-		gamblerController.setGokStrategy(gokStrategy);
+		gamblerController.getState().selectStrategy(gokStrategy);
 		if (gokStrategy == GokStrategy.ALLESISEVENSTRATEGY) allesEvenButton.setSelected(true);
 		else allesEvenButton.setSelected(false);
 		if (gokStrategy == GokStrategy.SOMIS21STRATEGY) somIs21Button.setSelected(true);
@@ -183,21 +189,10 @@ public class GamblerView {
 		else hogerDanVorigeButton.setSelected(false);
 	}
 
-	public void disableAllesiIsEvenButton(Boolean disable){
+	public void disableStrategyButtons(Boolean disable) {
 		allesEvenButton.setDisable(disable);
-	}
-
-	public void disableSomIs21Button(Boolean disable){
 		somIs21Button.setDisable(disable);
-	}
-
-	public void disableHogerDanVorigeButton(Boolean disable){
 		hogerDanVorigeButton.setDisable(disable);
-	}
-
-
-
-	public void disableConfirmChoiceButton(Boolean disable){
 		confirmChoiceButton.setDisable(disable);
 	}
 }

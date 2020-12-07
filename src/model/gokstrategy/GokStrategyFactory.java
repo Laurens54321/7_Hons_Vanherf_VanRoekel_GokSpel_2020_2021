@@ -1,13 +1,9 @@
 package model.gokstrategy;
 
 
-import model.DomainException;
-
-import java.lang.reflect.InvocationTargetException;
-
 public class GokStrategyFactory {
 
-    private RequestGokStrategy gokStrategy = new AllesIsEvenStrategy();
+    private RequestGokStrategy gokStrategy = new EverythingEvenStrategy();
     private GokStrategy currentgokStrategy;
     public boolean isGameOver;
 
@@ -15,8 +11,8 @@ public class GokStrategyFactory {
 
     }
 
-    public void werpDobbelsteen(int worp){
-        this.isGameOver = !gokStrategy.evalueerGok(worp);
+    public void rollDice(int roll){
+        this.isGameOver = !gokStrategy.evalueerGok(roll);
     }
 
     public void setGokStrategy(GokStrategy gokStrategy){

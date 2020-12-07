@@ -1,14 +1,35 @@
 package model.states;
 
-import view.GamblerView;
+import controller.GamblerController;
+import model.gokstrategy.GokStrategy;
 
 public class ChooseState implements RequestState{
+
+    GamblerController gamblerController;
+
+    public ChooseState(GamblerController gamblerController){
+        this.gamblerController = gamblerController;
+    }
+
     @Override
-    public void handleState(GamblerView gamblerView) {
-        gamblerView.disableAllesiIsEvenButton(false);
-        gamblerView.disableSomIs21Button(false);
-        gamblerView.disableHogerDanVorigeButton(false);
-        gamblerView.disableStartGameButton(true);
-        gamblerView.disableConfirmChoiceButton(false);
+    public boolean logIn(String login) {
+        return false;
+    }
+
+
+    @Override
+    public void selectStrategy(GokStrategy gokStrategy) {
+        gamblerController.setGokStrategy(gokStrategy);
+        gamblerController.setState(new PlayState(gamblerController));
+    }
+
+    @Override
+    public boolean startGame(int bet) {
+        return false;
+    }
+
+    @Override
+    public int throwDice() {
+        return -1;
     }
 }

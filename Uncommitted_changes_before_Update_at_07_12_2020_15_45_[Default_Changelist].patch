@@ -1,0 +1,822 @@
+Index: src/controller/GameController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/controller/GameController.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ src/controller/GameController.java	(date 1607352275268)
+@@ -7,35 +7,12 @@
+ 
+ public class GameController {
+     PlayerDB playerDB;
+-    Player currentPlayer;
+-
+-
+     public GameController(){ }
+-
+-    public PlayerDB getPlayerDB(){
+-        return playerDB;
+-    }
+-
+-    public void login(String userid){
+-        Player p = findPlayer(userid);
+-        if (p != null){
+-            currentPlayer = p;
+-            System.out.println("LOGGED IN | currentPlayer = " + p.getUserid());
+-        }
+-    }
+-
+-    public void setPlayerDB(PlayerDB playerDB){
++        public void setPlayerDB(PlayerDB playerDB){
+         this.playerDB = playerDB;
+     }
+ 
+-    public void logout(){
+-        currentPlayer = null;
+-        System.out.println("LOGGED OUT | currentPlayer = null" );
+-    }
+ 
+-    public Player getCurrentPlayer(){
+-        return currentPlayer;
+-    }
+ 
+     public ArrayList<Player> getPlayers(){
+         return playerDB.getPlayers();
+@@ -43,11 +20,4 @@
+ 
+ 
+ 
+-    private Player findPlayer(String userid){
+-        for (Player p : playerDB.getPlayers()) {
+-            if (p == null) break;
+-            if (p.getUserid().equals(userid)) return p;
+-        }
+-        return null;
+-    }
+ }
+Index: src/view/GamblerView.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/view/GamblerView.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ src/view/GamblerView.java	(date 1607352275271)
+@@ -58,18 +58,18 @@
+ 
+ 		Label betLabel = new Label();
+ 		betLabel.setText("Wat is je inzet?");
+-		TextField betText = new TextField();
++		TextField betField = new TextField();
+ 
+ 		startGameButton = new Button();
+ 		startGameButton.setDisable(true);
+ 
+ 		startGameButton.setText("Start gokspel");
+-		startGameButton.setOnAction(e -> startGame());
++		startGameButton.setOnAction(e -> startGame(Integer.parseInt(betField.getText())));
+ 
+ 		userId.getChildren().addAll(userIdLabel,userIdField, moneyStatusLabel); //je goksaldo label met var
+ 		userId.setSpacing(10);
+ 
+-		bet.getChildren().addAll(betLabel,betText);
++		bet.getChildren().addAll(betLabel,betField);
+ 		bet.setSpacing(30);
+ 
+ 		login.getChildren().addAll(userId,bet, startGameButton);
+@@ -89,15 +89,18 @@
+ 		allesEvenButton = new RadioButton("het aantal ogen bij elke worp is een even getal");
+ 		allesEvenButton.setToggleGroup(radioGroup);
+ 		allesEvenButton.setOnAction(e -> setAllesIsEvenStrategy());
++		allesEvenButton.setDisable(true);
+ 
+ 
+ 		somIs21Button = new RadioButton("de som van de ogen van alle worpen samen is 21");
+ 		somIs21Button.setToggleGroup(radioGroup);
+ 		somIs21Button.setOnAction(e -> setSomIs21Strategy());
++		somIs21Button.setDisable(true);
+ 
+ 		hogerDanVorigeButton = new RadioButton("het aantal ogen is bij elke worp hoger dan bij de vorige worp");
+ 		hogerDanVorigeButton.setToggleGroup(radioGroup);
+ 		hogerDanVorigeButton.setOnAction(e -> setHogerDanVorigeStrategy());
++		hogerDanVorigeButton.setDisable(true);
+ 
+ 		VBox rbtns = new VBox();
+ 		VBox rblabels = new VBox();
+@@ -120,6 +123,7 @@
+ 		confirmChoiceButton = new Button();
+ 		confirmChoiceButton.setText("Bevestig je keuze");
+ 		confirmChoiceButton.setOnAction(event -> confirmStrategyChoice());
++		confirmChoiceButton.setDisable(true);
+ 
+ 		strategyChoice.getChildren().addAll(strategyTitle,strategies, confirmChoiceButton);
+ 		strategyChoice.setAlignment(Pos.CENTER_LEFT);
+@@ -136,8 +140,9 @@
+ 		stage.show();
+ 	}
+ 
+-	public void startGame(){
+-
++	public void startGame(int bet){
++		boolean success = gamblerController.getState().startGame(bet);
++		if (!success) moneyStatusLabel.setText("You do not have enough money to start that game");
+ 	}
+ 
+ 	public void updateMoneyStatusLabel(){
+@@ -145,8 +150,9 @@
+ 	}
+ 
+ 	public void login(String userid){
+-		gamblerController.login(userid);
+-		if (gamblerController.getActivePlayer() != null){
++		boolean success = gamblerController.getState().logIn(userid);
++
++		if (success){
+ 			startGameButton.setDisable(false);
+ 			gamblerController.udpateMoneyDisplays();
+ 		}
+@@ -174,7 +180,7 @@
+ 	}
+ 
+ 	private void confirmStrategyChoice(){
+-		gamblerController.setGokStrategy(gokStrategy);
++		gamblerController.getState().selectStrategy(gokStrategy);
+ 		if (gokStrategy == GokStrategy.ALLESISEVENSTRATEGY) allesEvenButton.setSelected(true);
+ 		else allesEvenButton.setSelected(false);
+ 		if (gokStrategy == GokStrategy.SOMIS21STRATEGY) somIs21Button.setSelected(true);
+@@ -183,21 +189,10 @@
+ 		else hogerDanVorigeButton.setSelected(false);
+ 	}
+ 
+-	public void disableAllesiIsEvenButton(Boolean disable){
++	public void disableStrategyButtons(Boolean disable) {
+ 		allesEvenButton.setDisable(disable);
+-	}
+-
+-	public void disableSomIs21Button(Boolean disable){
+ 		somIs21Button.setDisable(disable);
+-	}
+-
+-	public void disableHogerDanVorigeButton(Boolean disable){
+ 		hogerDanVorigeButton.setDisable(disable);
+-	}
+-
+-
+-
+-	public void disableConfirmChoiceButton(Boolean disable){
+ 		confirmChoiceButton.setDisable(disable);
+ 	}
+ }
+Index: src/model/gokstrategy/GokStrategyFactory.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/model/gokstrategy/GokStrategyFactory.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ src/model/gokstrategy/GokStrategyFactory.java	(date 1607352275268)
+@@ -1,13 +1,9 @@
+ package model.gokstrategy;
+ 
+ 
+-import model.DomainException;
+-
+-import java.lang.reflect.InvocationTargetException;
+-
+ public class GokStrategyFactory {
+ 
+-    private RequestGokStrategy gokStrategy = new AllesIsEvenStrategy();
++    private RequestGokStrategy gokStrategy = new EverythingEvenStrategy();
+     private GokStrategy currentgokStrategy;
+     public boolean isGameOver;
+ 
+@@ -15,8 +11,8 @@
+ 
+     }
+ 
+-    public void werpDobbelsteen(int worp){
+-        this.isGameOver = !gokStrategy.evalueerGok(worp);
++    public void rollDice(int roll){
++        this.isGameOver = !gokStrategy.evalueerGok(roll);
+     }
+ 
+     public void setGokStrategy(GokStrategy gokStrategy){
+Index: src/model/states/RequestState.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/model/states/RequestState.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ src/model/states/RequestState.java	(date 1607352275270)
+@@ -1,8 +1,13 @@
+ package model.states;
+ 
+-import controller.GamblerController;
+-import view.GamblerView;
++import model.gokstrategy.GokStrategy;
+ 
+ public interface RequestState {
+-    public void handleState(GamblerView gamblerView);
++    public boolean logIn(String login);
++
++    public void selectStrategy(GokStrategy gokStrategy);
++
++    public boolean startGame(int bet);
++
++    public int throwDice();
+ }
+Index: src/model/gokstrategy/HogerDanVorigeStrategy.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/model/gokstrategy/HogerDanVorigeStrategy.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ src/model/gokstrategy/HogerDanVorigeStrategy.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
+@@ -1,15 +0,0 @@
+-package model.gokstrategy;
+-
+-
+-public class HogerDanVorigeStrategy implements RequestGokStrategy {
+-    private int vorige = 0;
+-
+-    @Override
+-    public boolean evalueerGok(int worp) {
+-        if (worp > vorige){
+-            vorige = worp;
+-            return true;
+-        }
+-        else return false;
+-    }
+-}
+Index: src/model/gokstrategy/SomIs21Strategy.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/model/gokstrategy/SomIs21Strategy.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ src/model/gokstrategy/SomIs21Strategy.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
+@@ -1,12 +0,0 @@
+-package model.gokstrategy;
+-
+-public class SomIs21Strategy implements RequestGokStrategy {
+-    private int sum = 0;
+-
+-    @Override
+-    public boolean evalueerGok(int worp) {
+-        sum += worp;
+-        if (sum <= 21) return true;
+-        else return false;
+-    }
+-}
+Index: src/model/gokstrategy/AllesIsEvenStrategy.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/model/gokstrategy/AllesIsEvenStrategy.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ src/model/gokstrategy/AllesIsEvenStrategy.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
+@@ -1,8 +0,0 @@
+-package model.gokstrategy;
+-
+-public class AllesIsEvenStrategy implements RequestGokStrategy {
+-    public boolean evalueerGok(int worp){
+-        if (worp%2 == 0) return true;
+-        else return false;
+-    }
+-}
+Index: Project.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Project.iml	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ Project.iml	(date 1607352275202)
+@@ -1,12 +1,13 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <module type="JAVA_MODULE" version="4">
+-  <component name="NewModuleRootManager" inherit-compiler-output="true">
++  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="true">
+     <exclude-output />
+     <content url="file://$MODULE_DIR$">
+       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+     </content>
+     <orderEntry type="inheritedJdk" />
+     <orderEntry type="sourceFolder" forTests="false" />
+-    <orderEntry type="library" name="ExcelPlugin" level="project" />
++    <orderEntry type="library" name="bestanden1" level="project" />
++    <orderEntry type="library" name="bestanden" level="project" />
+   </component>
+ </module>
+\ No newline at end of file
+Index: src/model/gokstrategy/HigherThanPreviousStrategy.java
+===================================================================
+--- src/model/gokstrategy/HigherThanPreviousStrategy.java	(date 0)
++++ src/model/gokstrategy/HigherThanPreviousStrategy.java	(date 0)
+@@ -0,0 +1,15 @@
++package model.gokstrategy;
++
++
++public class HigherThanPreviousStrategy implements RequestGokStrategy {
++    private int vorige = 0;
++
++    @Override
++    public boolean evalueerGok(int worp) {
++        if (worp > vorige){
++            vorige = worp;
++            return true;
++        }
++        else return false;
++    }
++}
+Index: src/model/gokstrategy/SumIs21Strategy.java
+===================================================================
+--- src/model/gokstrategy/SumIs21Strategy.java	(date 0)
++++ src/model/gokstrategy/SumIs21Strategy.java	(date 0)
+@@ -0,0 +1,12 @@
++package model.gokstrategy;
++
++public class SumIs21Strategy implements RequestGokStrategy {
++    private int sum = 0;
++
++    @Override
++    public boolean evalueerGok(int worp) {
++        sum += worp;
++        if (sum <= 21) return true;
++        else return false;
++    }
++}
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ .idea/misc.xml	(date 1607352275202)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8.0_271" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/out" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: src/model/gokstrategy/EverythingEvenStrategy.java
+===================================================================
+--- src/model/gokstrategy/EverythingEvenStrategy.java	(date 0)
++++ src/model/gokstrategy/EverythingEvenStrategy.java	(date 0)
+@@ -0,0 +1,8 @@
++package model.gokstrategy;
++
++public class EverythingEvenStrategy implements RequestGokStrategy {
++    public boolean evalueerGok(int worp){
++        if (worp%2 == 0) return true;
++        else return false;
++    }
++}
+Index: src/model/states/SecondThrowState.java
+===================================================================
+--- src/model/states/SecondThrowState.java	(date 0)
++++ src/model/states/SecondThrowState.java	(date 0)
+@@ -0,0 +1,36 @@
++package model.states;
++
++import controller.GamblerController;
++import model.gokstrategy.GokStrategy;
++
++public class SecondThrowState implements RequestState{
++
++    GamblerController gamblerController;
++
++    public SecondThrowState(GamblerController gamblerController){
++        this.gamblerController = gamblerController;
++    }
++
++    @Override
++    public boolean logIn(String login) {
++        return false;
++    }
++
++    @Override
++    public void selectStrategy(GokStrategy gokStrategy) {
++    }
++
++    @Override
++    public boolean startGame(int bet) {
++        if (gamblerController.raiseBet(bet)) {
++            gamblerController.setState(new PlayState(gamblerController));
++            return true;
++        }
++        else return false;
++    }
++
++    @Override
++    public int throwDice() {
++        return 0;
++    }
++}
+Index: src/model/states/PlayState.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/model/states/PlayState.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ src/model/states/PlayState.java	(date 1607352275270)
+@@ -1,15 +1,35 @@
+ package model.states;
+ 
+-import view.GamblerView;
++import controller.GamblerController;
++import model.gokstrategy.GokStrategy;
+ 
+ public class PlayState implements RequestState {
+ 
++    GamblerController gamblerController;
++
++    public PlayState(GamblerController gamblerController){
++        this.gamblerController = gamblerController;
++    }
++
++    @Override
++    public boolean logIn(String login) {
++        return false;
++    }
++
+     @Override
+-    public void handleState(GamblerView gamblerView) {
+-        gamblerView.disableAllesiIsEvenButton(true);
+-        gamblerView.disableSomIs21Button(true);
+-        gamblerView.disableHogerDanVorigeButton(true);
+-        gamblerView.disableStartGameButton(true);
+-        gamblerView.disableConfirmChoiceButton(true);
++    public void selectStrategy(GokStrategy gokStrategy) {
++
++    }
++
++    @Override
++    public boolean startGame(int bet) {
++        return false;
++    }
++
++    @Override
++    public int throwDice() {
++        if (gamblerController.isGameOver()) return -1;
++        if (gamblerController.getRollCount() == 0) gamblerController.setState(new SecondThrowState(gamblerController));
++        return gamblerController.rolldice();
+     }
+ }
+Index: src/model/states/BetState.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/model/states/BetState.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ src/model/states/BetState.java	(date 1607352275269)
+@@ -1,14 +1,38 @@
+ package model.states;
+ 
++import controller.GamblerController;
++import model.gokstrategy.GokStrategy;
+ import view.GamblerView;
+ 
+ public class BetState implements RequestState {
++
++    GamblerController gamblerController;
++
++    public BetState(GamblerController gamblerController){
++        this.gamblerController = gamblerController;
++    }
++
++
++
++    @Override
++    public boolean logIn(String login) {
++        gamblerController.setState(new BetState(gamblerController));
++        return gamblerController.login(login);
++    }
++
+     @Override
+-    public void handleState(GamblerView gamblerView) {
+-        gamblerView.disableAllesiIsEvenButton(true);
+-        gamblerView.disableSomIs21Button(true);
+-        gamblerView.disableHogerDanVorigeButton(true);
+-        gamblerView.disableStartGameButton(false);
+-        gamblerView.disableConfirmChoiceButton(true);
++    public void selectStrategy(GokStrategy gokStrategy) {
++
++    }
++
++    @Override
++    public boolean startGame(int bet) {
++        gamblerController.setState(new ChooseState(gamblerController));
++        return gamblerController.setActiveBet(bet);
++    }
++
++    @Override
++    public int throwDice() {
++        return -1;
+     }
+ }
+Index: src/model/states/ChooseState.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/model/states/ChooseState.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ src/model/states/ChooseState.java	(date 1607352275269)
+@@ -1,14 +1,35 @@
+ package model.states;
+ 
+-import view.GamblerView;
++import controller.GamblerController;
++import model.gokstrategy.GokStrategy;
+ 
+ public class ChooseState implements RequestState{
++
++    GamblerController gamblerController;
++
++    public ChooseState(GamblerController gamblerController){
++        this.gamblerController = gamblerController;
++    }
++
++    @Override
++    public boolean logIn(String login) {
++        return false;
++    }
++
++
+     @Override
+-    public void handleState(GamblerView gamblerView) {
+-        gamblerView.disableAllesiIsEvenButton(false);
+-        gamblerView.disableSomIs21Button(false);
+-        gamblerView.disableHogerDanVorigeButton(false);
+-        gamblerView.disableStartGameButton(true);
+-        gamblerView.disableConfirmChoiceButton(false);
++    public void selectStrategy(GokStrategy gokStrategy) {
++        gamblerController.setGokStrategy(gokStrategy);
++        gamblerController.setState(new PlayState(gamblerController));
++    }
++
++    @Override
++    public boolean startGame(int bet) {
++        return false;
++    }
++
++    @Override
++    public int throwDice() {
++        return -1;
+     }
+ }
+Index: src/controller/GamblerController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/controller/GamblerController.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ src/controller/GamblerController.java	(date 1607352275268)
+@@ -4,22 +4,40 @@
+ import model.database.PlayerDB;
+ import model.gokstrategy.GokStrategy;
+ import model.gokstrategy.GokStrategyFactory;
++import model.gokstrategy.RequestGokStrategy;
++import model.states.LogInState;
++import model.states.RequestState;
+ import view.GamblerView;
+ import view.observer.MoneyObserver;
+ 
+ public class GamblerController implements MoneyObserver {
+ 
++    private RequestState state;
++
+     private view.GamblerView gamblerView;
+     public GokStrategyFactory gokStrategyFactory;
+ 
+     private PlayerDB playerDB;
+     private Player activePlayer;
+ 
++    private double activeBet;
++
++    private int rollCount = 0;
++
+     public GamblerController(PlayerDB playerDB) {
+         gamblerView = new view.GamblerView(this);
+         this.playerDB = playerDB;
+         gokStrategyFactory = new GokStrategyFactory();
++        state = new LogInState(this);
++
++    }
+ 
++    public void setState(RequestState state){
++        this.state = state;
++    }
++
++    public RequestState getState(){
++        return state;
+     }
+ 
+     public Player getActivePlayer(){
+@@ -31,10 +49,52 @@
+         if (p != null){
+             activePlayer = p;
+             System.out.println("Logged in as " + p.getUserid());
++            playerDB.updateMoneyObservers();
++            gamblerView.disableStartGameButton(false);
++            return true;
++        }
++        return false;
++    }
++
++    public boolean setActiveBet(int bet){
++        if (activePlayer.getMoney() <  bet) return false;
++        else {
++            this.activeBet = bet;
++            rollCount = 0;
++            gamblerView.disableStartGameButton(true);
++            gamblerView.disableStrategyButtons(false);
+             return true;
+         }
+-        return false;
++    }
++
++    public boolean raiseBet(int bet){
++        if (activePlayer.getMoney() < bet + activeBet) return false;
++        else {
++            this.activeBet = bet;
++            gamblerView.disableStartGameButton(true);
++            return false;
++        }
+     }
++
++    public boolean isGameOver(){
++        return gokStrategyFactory.isGameOver;
++    }
++
++    public int getRollCount(){
++        return rollCount;
++    }
++
++    public void setGokStrategy(GokStrategy gokStrategy){
++        gamblerView.disableStrategyButtons(true);
++        gokStrategyFactory.setGokStrategy(gokStrategy);
++    }
++
++    public int rolldice(){
++        int roll = (int) (Math.random()*6);
++        gokStrategyFactory.rollDice(roll);
++        rollCount += 1;
++        return roll;
++    }
+ 
+     public void udpateMoneyDisplays(){
+         playerDB.updateMoneyObservers();
+@@ -46,9 +106,7 @@
+         gamblerView.updateMoneyStatusLabel();
+     }
+ 
+-    public void setGokStrategy(GokStrategy gokStrategy){
+-        gokStrategyFactory.setGokStrategy(gokStrategy);
+-    }
++
+ 
+ 
+ }
+Index: src/model/states/LogInState.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/model/states/LogInState.java	(revision 343b9ed5b4c79b3a2b34c71a8d7dfcfc5c7f5e4b)
++++ src/model/states/LogInState.java	(date 1607352275270)
+@@ -1,15 +1,34 @@
+ package model.states;
+ 
+ import controller.GamblerController;
+-import view.GamblerView;
++import model.gokstrategy.GokStrategy;
+ 
+ public class LogInState implements RequestState {
++
++    GamblerController gamblerController;
++
++    public LogInState(GamblerController gamblerController){
++        this.gamblerController = gamblerController;
++    }
++
++    @Override
++    public boolean logIn(String login) {
++        gamblerController.setState(new BetState(gamblerController));
++        return gamblerController.login(login);
++    }
++
+     @Override
+-    public void handleState(GamblerView gamblerView) {
+-        gamblerView.disableAllesiIsEvenButton(true);
+-        gamblerView.disableSomIs21Button(true);
+-        gamblerView.disableHogerDanVorigeButton(true);
+-        gamblerView.disableStartGameButton(true);
+-        gamblerView.disableConfirmChoiceButton(true);
++    public void selectStrategy(GokStrategy gokStrategy) {
++
++    }
++
++    @Override
++    public boolean startGame(int bet) {
++        return false;
++    }
++
++    @Override
++    public int throwDice() {
++        return -1;
+     }
+ }
+diff --git out/production/Project/view/GamblerView.class out/production/Project/view/GamblerView.class
+index b3144f59ebdd2840547a3fc879e5c8254d13537e..b3144f59ebdd2840547a3fc879e5c8254d13537e
+GIT binary patch
+literal 4724
+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
+XJP6_ac~d?>%=NedH|D9&;>Q01>RIao
+
+diff --git out/production/Project/controller/GameController.class out/production/Project/controller/GameController.class
+index c918f61a8abf94e165b581600e9359a5a22b4dca..c918f61a8abf94e165b581600e9359a5a22b4dca
+GIT binary patch
+literal 2075
+zc$|GyZBrXn6n-v*-LNbHLjfza2BbExO^dBmq1XZ~q9LFG6nwo&wqfhC8#lX-%=iQR
+z3;pEBex;5Lqn+vaNoV{A{*?}+p1ZpQHUyK|d+)jTygcVQ=ia~m`RxUOo7hz_jN84q
+zfOixc-W99aUd-W+jClnTZb$K+nC~ix<DOV8C|JZ&6!#T8z_Nn(vC@YR@SzwAGFBB7
+zu_j|(#zzd%y21A~duf5;Vqwp!YDT`w9bV=QEx#Td%`)^?T-(-6$KPUz1-iaW3eucz
+z>drhvcQUob5Lu*ShJk`^YDIUitl1m9Y|u`;U{$!W#cf^4!DhtS)f)_Bg^Fc5wq+Qa
+zonPjA+G0zj2z@opS#N<IOQ!w@ZjWKrbdzB?S$M?1<9UOdwS393b+a}r;7M*nv-PTg
+zbLO0Z)hXeU!z<sc^126+SR(+9(*VYk=f?LU5CY3}7zPRUVwk+a7WNi>N-H_yVU*52
+zSgxZR`Fpm__X~Q%A+_F;UNgDl+C<vb&RTO}*Ym>pL*1+%2cPUjN!Uil$7EEpT)Uz@
+z&_#iU!qvDYJg9gLV=6{4s^Tr&RPib<$|$MWz$WF;9%RAQjj8}JURYaRzQ2@MDJFhM
+zgxV@`C!t~spQ!j0+bVXjE#os4pJR$)BCuN9+~{Ctx`rX+3l(`>m+_^FukbZxp@O5V
+zq5`V4dOAfJnu>?0QPZE>a#W|29M;N@v<g)-e!}>QquJcC!g{6shNJD#E%0hT>{G2<
+z`E{beAtE%sCoT)G*EN$s<vJGQ9O^{<sZBP6*1eECt4S(R$MV-ywGPo4<hqayx*enE
+zH1M%yxUtB!-b#5S)O^QOP<VNlH;UT#j`tAk(A73QAq>`Mb2iLe09w+%b-B@KySsr!
+zY6lba01ngB*hL@p9>kA2kH#pNXh|B!Ny^jAXzocLf<5&NF3~7?oBg;<qv|W*btGt}
+z9>e4r<6qEq&}KZ?(fAEa1;#(3oBlvHojFAJYW5FIrL)fv`58UWA#EQ*jz^p5%{HOX
+z)I?tsssPyS#TX%<pd2O2QXy%8a?DVEB4)z(8^jc=D|nNlN;F<2oh~GO9*&Tak)o3{
+z+4`vF=~Qqgr8CdabwY^Z?T%B_OJ0l-U#k^E@>mvhWLw<cB^{A{EY1A9;{8DmzR#G4
+zGeJHli0a8xe8pOP<#4S7*^zd#uXH4vt~qH5<LSUSDk{}Ptld6!%03#{-|%#%>7#cm
+z0Pzz^5t?TLKTQm*W`D&X!(&X*;uVJ95ijQcg!BYMIjUWziJ`~n$sIiT_iuL4R=+%j
+zy-wh7P?%}lqCm&>yG*qewGs@?v{;@ADw*_ZA2~vwj9W+IK~24c`qJb3Z4dU$f5t4e
+A4gdfE
+
+diff --git out/production/Project/application/GokSpelMain.class out/production/Project/application/GokSpelMain.class
+index cae91b6e66e35312651ad6ad0c8d7324bb6a855e..cae91b6e66e35312651ad6ad0c8d7324bb6a855e
+GIT binary patch
+literal 1005
+zc$|GxU2hUW6g>kAOSh}gT3e|VOVzrq*fr57YfNg5eSy{l)1>iffRT>w2N@QWcmI$t
+zVkGeg_@j(>CTl@cBw_B%z4x4Z&z+s0zrOzf@C1(>EaHxhyACqi-g97K+s1tdd2DN^
+z=fJ^^ja?fL81m0#B$MY1S#Rf*!8(jPf}vQKkvJZNEur4<RzRNRdfev0DOXaTQ>T@j
+z%RWQ7&U?K;ws|7s$UlldG<zawa2f40<oXF$3B#IKf6s^f-6x+MUEw$Ny01&RJtae~
+zM#jUia#<cjp%?IxP%mHTav?Pt_#K|`7ViuHbsD0yBJYGUI*g-4#X%qx!$!S*aq<uT
+zjuK$0%R|zlW+9bX$kD%X0$Cx6V_5axnr8igM_uYv$*5~2SzL8#F4ryzGdRt7pxWY<
+z)DtYtOlwakyKr%Z#x+MG!}@$V8e1d9|LfkxL+rWmQK2Gpu8k&;-ob3b!E{eGyt$X4
+z2e8OHos(8ysG*+crdJ<I@zIY{kKc$RG5QlXfPBCQQTrTK=<iqmvS4}?v|go?PnMC*
+z?T*2|&?bW-t$E{gQ8KGZz!H|p()6*Cf<F^kj_lS1nX@snjR~x?+8DXx3G#YlKecLQ
+z>njRV=2e3zqCk9_@h0(AiLqo}nPE#S>D_h8r*9PNSi=os(3movvV^ngzd?_10k=>|
+eJ9>N}=NlHLMfLLpQCLJWE9o{ijijo{-1-e@0qPY1
+
