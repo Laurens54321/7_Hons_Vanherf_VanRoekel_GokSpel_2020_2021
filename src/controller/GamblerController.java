@@ -8,9 +8,9 @@ import model.states.BetState;
 import model.states.LogInState;
 import model.states.RequestState;
 import model.states.SecondThrowState;
-import view.observer.MoneyObserver;
+import view.observer.PlayerObserver;
 
-public class GamblerController implements MoneyObserver {
+public class GamblerController implements PlayerObserver {
 
     private RequestState state;
 
@@ -133,7 +133,7 @@ public class GamblerController implements MoneyObserver {
 
 
     @Override
-    public void updateMoney() {
+    public void updatePlayers() {
         gamblerView.updateActiveBalance();
     }
 

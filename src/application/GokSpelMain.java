@@ -1,6 +1,6 @@
 package application;
 	
-import controller.AdminController;
+import controller.AdminViewController;
 import controller.GamblerController;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -11,7 +11,7 @@ public class GokSpelMain extends Application {
 	public void start(Stage primaryStage) {
 		PlayerDB playerDB = new PlayerDB();
 
-		AdminController adminController = new AdminController(playerDB);
+		AdminViewController adminViewController = new AdminViewController(playerDB);
 		GamblerController gamblerController = new GamblerController(playerDB);
 		playerDB.addObserver(gamblerController);
 	}

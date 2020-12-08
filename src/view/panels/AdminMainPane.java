@@ -1,6 +1,7 @@
 package view.panels;
 
 
+import controller.AdminMainController;
 import controller.GameController;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -12,23 +13,20 @@ import view.panels.SpelVerloopPane;
 import view.panels.StatistiekPane;
 
 public class AdminMainPane extends BorderPane {
-	public AdminMainPane(GameController db){
-	    TabPane tabPane = new TabPane();
+    AdminMainController adminMainController;
 
-        SpelVerloopPane spelVerloopPane = new SpelVerloopPane();
-        GamblerOverviewPane gamblerOverviewPane = new GamblerOverviewPane(db);
-        InstellingPane instellingPane = new InstellingPane();
-        StatistiekPane statistiekPane = new StatistiekPane();
+    TabPane tabPane;
 
 
-	    Tab spelVerloopTab = new Tab("Spelverloop", spelVerloopPane);
-        Tab spelerTab = new Tab("Spelers", gamblerOverviewPane);
-        Tab instellingTab = new Tab("Instellingen", instellingPane);
-        Tab statistiekTab = new Tab("Statistieken", statistiekPane);
-        tabPane.getTabs().add(spelVerloopTab);
-        tabPane.getTabs().add(spelerTab);
-        tabPane.getTabs().add(statistiekTab);
-        tabPane.getTabs().add(instellingTab);
+    public AdminMainPane(AdminMainController adminMainController){
+        this.adminMainController = adminMainController;
+	    tabPane = new TabPane();
         this.setCenter(tabPane);
 	}
+
+	public void addTab(Tab tab){
+        System.out.println("added a tab");
+        tabPane.getTabs().add(tab);
+        this.setCenter(tabPane);
+    }
 }

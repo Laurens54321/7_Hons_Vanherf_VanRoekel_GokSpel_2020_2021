@@ -1,6 +1,7 @@
 package view.panels;
 
 
+import controller.GamblerOverviewController;
 import controller.GameController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,11 +17,11 @@ import model.Player;
 public class GamblerOverviewPane extends GridPane{
 	private ObservableList<Player> players;
 	private TableView<Player> table;
-	private GameController gameController;
+	private GamblerOverviewController gamblerOverviewController;
 	
 	
-	public GamblerOverviewPane(GameController db) {
-		gameController = db;
+	public GamblerOverviewPane(GamblerOverviewController gamblerOverviewController) {
+		this.gamblerOverviewController = gamblerOverviewController;
 
 
         Label lblHeading = new Label ("Player List: ");
@@ -48,7 +49,7 @@ public class GamblerOverviewPane extends GridPane{
 	}
 
 	public void refresh(){
-		players = FXCollections.observableArrayList(gameController.getPlayers());
+		players = FXCollections.observableArrayList(gamblerOverviewController.getPlayers());
 		table.setItems(players);
 		table.refresh();
 	}

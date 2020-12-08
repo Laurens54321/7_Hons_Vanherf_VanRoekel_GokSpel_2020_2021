@@ -3,7 +3,6 @@ package view;
 import controller.GamblerController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -12,8 +11,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.gokstrategy.GokStrategy;
 
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.html.HTMLEditorKit;
 import java.util.ArrayList;
 
 public class GamblerView {
@@ -235,7 +232,7 @@ public class GamblerView {
 
 	public void setLoseMessage(boolean enable){
 		if (enable) {
-			gamblerController.updateMoney();
+			gamblerController.updatePlayers();
 			endOfGameLabel.setText("HELAAS, JE HEBT NIET GEWONNEN SUKKEL \nJe nieuwe goksaldo bedraagt " + activeBalance );
 			endOfGameLabel.setBackground(new Background(new BackgroundFill(Color.RED,null,null)));
 
@@ -246,7 +243,7 @@ public class GamblerView {
 	}
 
 	public void setWinMessage(){
-		gamblerController.updateMoney();
+		gamblerController.updatePlayers();
 		endOfGameLabel.setText("HOERA, JE HEBT GEWONNEN SUKKEL \nJe nieuwe goksaldo bedraagt " + activeBalance );
 		endOfGameLabel.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN,null,null)));
 	}

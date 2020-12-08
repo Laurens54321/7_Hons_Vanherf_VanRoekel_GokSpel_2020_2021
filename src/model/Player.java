@@ -1,12 +1,6 @@
 package model;
 
-import javafx.scene.layout.Pane;
 import model.database.PlayerDB;
-import view.observer.MoneyObserver;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class Player {
     private String firstName;

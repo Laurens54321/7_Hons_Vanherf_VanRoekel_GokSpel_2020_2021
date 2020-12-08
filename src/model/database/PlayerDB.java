@@ -4,7 +4,7 @@ import model.DomainException;
 import model.Player;
 import model.database.filecontroller.ExcelLoadSavePlayer;
 import model.database.filecontroller.LoadSaveStrategy;
-import view.observer.MoneyObserver;
+import view.observer.PlayerObserver;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +15,7 @@ public class PlayerDB {
     private HashMap<String, Player> DB;
     private LoadSaveStrategy saveStrategy = new ExcelLoadSavePlayer();
 
-    private Collection<MoneyObserver> observers = new ArrayList<>();
+    private Collection<PlayerObserver> observers = new ArrayList<>();
 
     public PlayerDB(){
 
@@ -66,13 +66,13 @@ public class PlayerDB {
         setDB(saveStrategy.load());
     }
 
-    public void addObserver(MoneyObserver obs){
+    public void addObserver(PlayerObserver obs){
         observers.add(obs);
     }
 
     public void updateMoneyObservers(){
-        for (MoneyObserver obs : observers)
-            obs.updateMoney();
+        for (PlayerObserver obs : observers)
+            obs.updatePlayers();
     }
 
     public void save(){
