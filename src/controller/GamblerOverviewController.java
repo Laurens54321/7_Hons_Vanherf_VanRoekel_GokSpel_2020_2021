@@ -27,6 +27,6 @@ public class GamblerOverviewController implements PlayerObserver {
 
     @Override
     public void updatePlayers() {
-
+        gamblerOverviewPane.refresh();
     }
 }

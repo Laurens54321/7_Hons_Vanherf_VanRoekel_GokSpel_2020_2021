@@ -10,30 +10,30 @@ public class AdminMainController {
 
     private PlayerDB playerDB;
 
-    private SpelVerloopPane spelVerloopPane;
+    private SpelVerloopController spelVerloopController;
     private GamblerOverviewController gamblerOverviewController;
     private InstellingPane instellingPane;
-    private StatistiekPane statistiekPane;
+    private StatistiekController statistiekController;
 
 
-    public AdminMainController(AdminViewController adminViewController, PlayerDB playerDB){
+
+
+
+    public AdminMainController(AdminViewController adminViewController, PlayerDB playerDB, GamblerController gamblerController){
         this.adminViewController = adminViewController;
         adminMainPane = new AdminMainPane(this);
 
-
         this.playerDB = playerDB;
 
-
-
-        spelVerloopPane = new SpelVerloopPane();
+        spelVerloopController = new SpelVerloopController(gamblerController);
         gamblerOverviewController = new GamblerOverviewController(playerDB);
         instellingPane = new InstellingPane();
-        statistiekPane = new StatistiekPane();
+        statistiekController = new StatistiekController(gamblerController);
 
-        Tab spelVerloopTab = new Tab("Spelverloop", spelVerloopPane);
+        Tab spelVerloopTab = new Tab("Spelverloop", spelVerloopController.getSpelVerloopPane());
         Tab spelerTab = new Tab("Spelers", gamblerOverviewController.getGamblerOverviewPane());
         Tab instellingTab = new Tab("Instellingen", instellingPane);
-        Tab statistiekTab = new Tab("Statistieken", statistiekPane);
+        Tab statistiekTab = new Tab("Statistieken", statistiekController.getStatistiekPane());
 
         adminMainPane.addTab(spelVerloopTab);
         adminMainPane.addTab(spelerTab);

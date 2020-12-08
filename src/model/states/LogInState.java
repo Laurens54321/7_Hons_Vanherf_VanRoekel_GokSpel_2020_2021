@@ -14,8 +14,9 @@ public class LogInState implements RequestState {
 
     @Override
     public boolean logIn(String login) {
-        gamblerController.setState(new BetState(gamblerController));
-        return gamblerController.login(login);
+        boolean success = gamblerController.login(login);
+        if (success) gamblerController.setState(new BetState(gamblerController));
+        return success;
     }
 
     @Override

@@ -9,20 +9,23 @@ public class AdminViewController {
 
     private AdminView adminView;
     private AdminMainController adminMainController;
+    private GamblerController gamblerController;
 
     private PlayerDB playerDB;
 
-    public AdminViewController(PlayerDB playerDB){
+    public AdminViewController(PlayerDB playerDB, GamblerController gamblerController){
         this.playerDB = playerDB;
         playerDB.loadPlayers();
 
-        GameController gameController = new GameController();
-        gameController.setPlayerDB(playerDB);
-
+        this.gamblerController = gamblerController;
 
         adminView = new AdminView(this);
-        adminMainController = new AdminMainController(this, playerDB);
+        adminMainController = new AdminMainController(this, playerDB, gamblerController);
         adminView.setAdminPane(adminMainController.getAdminMainPane());
 
+    }
+
+    public GamblerController getGamblerController() {
+        return gamblerController;
     }
 }

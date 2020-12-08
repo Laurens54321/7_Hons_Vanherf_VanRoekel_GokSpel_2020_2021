@@ -11,8 +11,9 @@ public class GokSpelMain extends Application {
 	public void start(Stage primaryStage) {
 		PlayerDB playerDB = new PlayerDB();
 
-		AdminViewController adminViewController = new AdminViewController(playerDB);
 		GamblerController gamblerController = new GamblerController(playerDB);
+		AdminViewController adminViewController = new AdminViewController(playerDB, gamblerController);
+
 		playerDB.addObserver(gamblerController);
 	}
 	

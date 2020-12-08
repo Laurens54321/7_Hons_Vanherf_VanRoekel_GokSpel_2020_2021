@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.gokstrategy.GokStrategy;
 
+
 import java.util.ArrayList;
 
 public class GamblerView {
@@ -191,7 +192,9 @@ public class GamblerView {
 
 	private void startGame(int bet){
 		boolean success = gamblerController.getState().startGame(bet);
-		if (!success) moneyStatusLabel.setText("You do not have enough money to start that game");
+		if (!success) moneyStatusLabel.setText("You do not have enough money to do that");
+		else updateActiveBalance();
+
 	}
 
 	private void login(String userid){
@@ -218,6 +221,7 @@ public class GamblerView {
 	}
 
 	public void updateActiveBalance(){
+		if (gamblerController.getActivePlayer() == null) return;
 		activeBalance = gamblerController.getActivePlayer().getMoney();
 		moneyStatusLabel.setText("Je goksaldo is " + activeBalance + " €");
 	}
@@ -253,15 +257,15 @@ public class GamblerView {
 	}
 
 	private void setAllesIsEvenStrategy(){
-		gokStrategy = GokStrategy.ALLESISEVENSTRATEGY;
+		gokStrategy = GokStrategy.EVERYTHINGEVENSTRATEGY;
 	}
 
 	private void setSomIs21Strategy(){
-		gokStrategy = GokStrategy.SOMIS21STRATEGY;
+		gokStrategy = GokStrategy.SUMIS21STRATEGY;
 	}
 
 	private void setHogerDanVorigeStrategy(){
-		gokStrategy = GokStrategy.HOGERDANVORIGESTRATEGY;
+		gokStrategy = GokStrategy.HIGHERTHANPREVIOUSSTRATEGY;
 	}
 
 	private void confirmStrategyChoice(){
@@ -277,7 +281,9 @@ public class GamblerView {
 
 	}
 
-
+	public void updateBetfield(){
+		betField.setText(String.valueOf(gamblerController.getActiveBet()));
+	}
 
 	public void disableThrowDiceButton(Boolean disable){
 		rollDiceButton.setDisable(disable);

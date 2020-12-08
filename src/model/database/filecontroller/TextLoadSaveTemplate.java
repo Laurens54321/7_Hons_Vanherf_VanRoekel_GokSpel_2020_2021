@@ -1,7 +1,6 @@
 package model.database.filecontroller;
 
 import model.DomainException;
-import model.GeneriekeList;
 
 import java.io.File;
 import java.io.FileNotFoundException;

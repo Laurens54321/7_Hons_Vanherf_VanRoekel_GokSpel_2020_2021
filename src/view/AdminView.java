@@ -1,7 +1,7 @@
 package view;
 
 import controller.AdminViewController;
-import controller.GameController;
+import controller.GamblerController;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -38,7 +38,5 @@ public class AdminView {
 		borderPane.prefHeightProperty().bind(scene.heightProperty());
 		borderPane.prefWidthProperty().bind(scene.widthProperty());
 		root.getChildren().add(borderPane);
-		System.out.println("this should be last");
-
 	}
 }

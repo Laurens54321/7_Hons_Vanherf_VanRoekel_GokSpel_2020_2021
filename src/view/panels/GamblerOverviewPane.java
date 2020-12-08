@@ -2,7 +2,6 @@ package view.panels;
 
 
 import controller.GamblerOverviewController;
-import controller.GameController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
@@ -33,19 +32,22 @@ public class GamblerOverviewPane extends GridPane{
 		TableColumn<Player, String> colFirstName = new TableColumn<Player, String>("First name");
 		colFirstName.setMinWidth(100);
 		colFirstName.setCellValueFactory(new PropertyValueFactory<Player, String>("firstName"));
+
 		TableColumn<Player, String> colLastName = new TableColumn<>("Last name");
 		colLastName.setMinWidth(100);
 		colLastName.setCellValueFactory(new PropertyValueFactory<Player, String>("lastName"));
+
 		TableColumn<Player, String> colUserid = new TableColumn<>("userid");
 		colUserid.setMinWidth(100);
 		colUserid.setCellValueFactory(new PropertyValueFactory<Player, String>("userid"));
+
 		TableColumn<Player, Integer> colMoney = new TableColumn<>("money");
 		colMoney.setMinWidth(100);
 		colMoney.setCellValueFactory(new PropertyValueFactory<Player, Integer>("money"));
+
 		table.getColumns().addAll(colFirstName, colLastName, colUserid, colMoney);
 
 		this.add(table, 5, 5, 5, 5);
-
 	}
 
 	public void refresh(){

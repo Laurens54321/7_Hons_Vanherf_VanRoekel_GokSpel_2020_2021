@@ -23,11 +23,7 @@ public class SecondThrowState implements RequestState{
 
     @Override
     public boolean startGame(int bet) {
-        if (gamblerController.raiseBet(bet)) {
-            gamblerController.setState(new PlayState(gamblerController));
-            return true;
-        }
-        else return false;
+        return gamblerController.raiseBet(bet);
     }
 
     @Override
