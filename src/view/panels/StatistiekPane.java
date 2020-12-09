@@ -1,45 +1,64 @@
 package view.panels;
 
+import controller.StatistiekController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import model.Player;
+import model.StrategyStat;
 import model.gokstrategy.GokStrategy;
 
 
 public class StatistiekPane extends GridPane {
+    StatistiekController statistiekController;
+
+    private ObservableList<StrategyStat> stats;
+    private TableView<StrategyStat> table;
 
     TableView tableView;
 
-    public StatistiekPane(){
-        tableView = new TableView();
-        TableColumn strategyColumn = new TableColumn("Strategie");
-        TableColumn aantalKeerGekozen = new TableColumn("Aantal keer gekozen");
-        TableColumn aantalKeerGewonnen = new TableColumn("Aantal keer gewonnen");
-        TableColumn totaleInzet = new TableColumn("Totale inzet");
-        TableColumn totaleWinst = new TableColumn("Totale winst");
+    public StatistiekPane(StatistiekController statistiekController){
+        this.statistiekController = statistiekController;
 
+        Label lblHeading = new Label ("Player List: ");
+        lblHeading.setFont(new Font("Arial", 20));
 
-        strategyColumn.setCellFactory(new PropertyValueFactory<>("strategie"));
+        table = new TableView<StrategyStat>();
+        refresh();
 
-        aantalKeerGekozen.setMinWidth(10);
-        aantalKeerGekozen.setCellValueFactory(new PropertyValueFactory<>("aantalGekozen"));
+        TableColumn<StrategyStat, String> colGokStrategy = new TableColumn<>("Gok Strategy");
+        colGokStrategy.setMinWidth(120);
+        colGokStrategy.setCellValueFactory(new PropertyValueFactory<>("gokStrategyString"));
 
+        TableColumn<StrategyStat, Integer> colCount = new TableColumn<>("# of games");
+        colCount.setMinWidth(100);
+        colCount.setCellValueFactory(new PropertyValueFactory<>("count"));
 
-        aantalKeerGewonnen.setMinWidth(10);
-        aantalKeerGewonnen.setCellValueFactory(new PropertyValueFactory<>("aantalGewonnen"));
+        TableColumn<StrategyStat, Integer> colWon = new TableColumn<>("# of games won");
+        colWon.setMinWidth(100);
+        colWon.setCellValueFactory(new PropertyValueFactory<>("won"));
 
-        totaleInzet.setMinWidth(10);
-        totaleInzet.setCellValueFactory(new PropertyValueFactory<>("totalSpent"));
+        TableColumn<StrategyStat, Double> colBetTotal = new TableColumn<>("€ bet");
+        colBetTotal.setMinWidth(100);
+        colBetTotal.setCellValueFactory(new PropertyValueFactory<>("betTotal"));
 
-        totaleWinst.setMinWidth(10);
-        totaleWinst.setCellValueFactory(new PropertyValueFactory<>("totalProfit"));
+        TableColumn<StrategyStat, Double> colWonTotal = new TableColumn<>("€ won");
+        colWonTotal.setMinWidth(100);
+        colWonTotal.setCellValueFactory(new PropertyValueFactory<>("wonTotal"));
 
-        tableView.getColumns().addAll(strategyColumn, aantalKeerGekozen, aantalKeerGewonnen, totaleInzet);
+        table.getColumns().addAll(colGokStrategy, colCount, colWon, colBetTotal, colWonTotal);
 
+        this.add(table, 5, 5, 5, 5);
     }
 
     public void refresh(){
-        //tableView.setItems(GokStrategy.getEnumConstants());
+        stats = FXCollections.observableArrayList(statistiekController.getStrategyStats());
+        table.setItems(stats);
+        table.refresh();
     }
 }

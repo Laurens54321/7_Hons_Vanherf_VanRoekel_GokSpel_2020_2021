@@ -75,7 +75,12 @@ public class GamblerView {
 		startGameButton.setDisable(true);
 
 		startGameButton.setText("Start gokspel");
-		startGameButton.setOnAction(e -> startGame(Integer.parseInt(betField.getText())));
+		try{
+			startGameButton.setOnAction(e -> startGame(Integer.parseInt(betField.getText())));
+		} catch (NumberFormatException e){
+
+		}
+
 
 		userId.getChildren().addAll(userIdLabel,userIdField, moneyStatusLabel); //je goksaldo label met var
 		userId.setSpacing(10);
@@ -202,13 +207,10 @@ public class GamblerView {
 
 		if (success){
 			startGameButton.setDisable(false);
-			gamblerController.udpateMoneyDisplays();
-			moneyStatusLabel.setTextFill(Color.web("#000000"));
+			disableErrorMessage();
 		}
 		else{
-			startGameButton.setDisable(true);
-			moneyStatusLabel.setText(userid + " not found in database");
-			moneyStatusLabel.setTextFill(Color.web("#ff0000"));
+			setErrorMessage(userid + " not found in database");
 		}
 
 	}
@@ -224,6 +226,16 @@ public class GamblerView {
 		if (gamblerController.getActivePlayer() == null) return;
 		activeBalance = gamblerController.getActivePlayer().getMoney();
 		moneyStatusLabel.setText("Je goksaldo is " + activeBalance + " €");
+	}
+
+	public void setErrorMessage(String errorMessage){
+		moneyStatusLabel.setText(errorMessage);
+		moneyStatusLabel.setTextFill(Color.web("#ff0000"));
+	}
+
+	public void disableErrorMessage(){
+		gamblerController.udpateMoneyDisplays();
+		moneyStatusLabel.setTextFill(Color.web("#000000"));
 	}
 
 	public void disableBetField(boolean disable){

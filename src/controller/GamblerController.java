@@ -38,6 +38,7 @@ public class GamblerController implements PlayerObserver {
     }
 
     public void setState(RequestState state){
+
         if (state.getClass() == LogInState.class){
             playerDB.updateMoneyObservers();
             gamblerView.disableBetField(true);
@@ -51,12 +52,14 @@ public class GamblerController implements PlayerObserver {
             gamblerView.disableStartGameButton(false);
             gamblerView.disableStrategyButtons(true);
             gamblerView.disableThrowDiceButton(true);
+            gamblerView.disableErrorMessage();
         }
         if (state.getClass() == ChooseState.class){
             gamblerView.disableBetField(true);
             gamblerView.disableStartGameButton(true);
             gamblerView.disableStrategyButtons(false);
             gamblerView.setLoseMessage(false);
+            gamblerView.disableErrorMessage();
         }
         if (state.getClass() == PlayState.class){
             gamblerView.disableBetField(true);
@@ -177,6 +180,7 @@ public class GamblerController implements PlayerObserver {
     public void updateStrategyObservers(GokStrategy gokStrategy, double bet, boolean won){
         for (StrategyObserver so : strategyObserverArrayList) {
             so.updateStrategy(gokStrategy, bet, won);
+            System.out.println("updated this first ofc");
         }
     }
 
