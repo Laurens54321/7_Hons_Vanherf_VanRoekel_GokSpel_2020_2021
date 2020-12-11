@@ -5,7 +5,6 @@ import model.gokstrategy.GokStrategy;
 
 public class StrategyStat {
     private GokStrategy gokStrategy;
-    private String gokStrategyString;
     private int count;
     private int won;
     private double betTotal;
@@ -17,8 +16,6 @@ public class StrategyStat {
 
     private void setGokStrategy(GokStrategy gokStrategy) {
         this.gokStrategy = gokStrategy;
-        this.gokStrategyString = gokStrategy.getName();
-        if (gokStrategy == GokStrategy.EASYSTRATEGY) wonTotal = 69;
     }
 
     public GokStrategy getGokStrategy() {
@@ -26,12 +23,10 @@ public class StrategyStat {
     }
 
     public String getGokStrategyString(){
-        System.out.println("pussy");
         return gokStrategy.getName();
     }
 
     public int getCount() {
-        System.out.println("penis");
         return count;
     }
 

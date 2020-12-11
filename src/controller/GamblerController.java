@@ -6,10 +6,13 @@ import model.gokstrategy.GokStrategy;
 import model.gokstrategy.GokStrategyFactory;
 import model.gokstrategy.RequestGokStrategy;
 import model.states.*;
+import view.observer.ActionObserver;
 import view.observer.PlayerObserver;
 import view.observer.StrategyObserver;
 
 import javax.security.auth.login.LoginContext;
+import javax.swing.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class GamblerController implements PlayerObserver {
@@ -20,6 +23,7 @@ public class GamblerController implements PlayerObserver {
     public GokStrategyFactory gokStrategyFactory;
 
     private ArrayList<StrategyObserver> strategyObserverArrayList;
+    private ArrayList<ActionObserver>actionObserverArrayList;
 
     private PlayerDB playerDB;
     private Player activePlayer;
@@ -33,6 +37,7 @@ public class GamblerController implements PlayerObserver {
         this.playerDB = playerDB;
         gokStrategyFactory = new GokStrategyFactory();
         strategyObserverArrayList = new ArrayList<>();
+        actionObserverArrayList = new ArrayList<>();
         setState(new LogInState(this));
 
     }
@@ -89,8 +94,7 @@ public class GamblerController implements PlayerObserver {
         Player p = playerDB.getPlayer(userid);
         if (p != null){
             activePlayer = p;
-            System.out.println("Logged in as " + p.getUserid());
-
+            updateActionObservers("Logged in as " + p.getUserid());
             return true;
         }
         return false;
@@ -101,6 +105,7 @@ public class GamblerController implements PlayerObserver {
         else {
             this.activeBet = bet;
             rollCount = 0;
+            updateActionObservers("Bet = " + bet + "€");
             return true;
         }
     }
@@ -114,7 +119,7 @@ public class GamblerController implements PlayerObserver {
         else {
             this.activeBet = bet;
             setState(new PlayState(this));
-            System.out.println("raised acitvebet");
+            updateActionObservers("Raised bet = " + bet + "€");
             return true;
         }
     }
@@ -124,26 +129,28 @@ public class GamblerController implements PlayerObserver {
     }
 
     public void gameOver(){
-        updateStrategyObservers(gokStrategyFactory.getGokStrategy(), activeBet, false);
         gamblerView.disableBetField(false);
         gamblerView.disableStartGameButton(true);
         gamblerView.disableStrategyButtons(true);
         gamblerView.disableThrowDiceButton(true);
         activePlayer.addMoney(-activeBet);
         gamblerView.setLoseMessage(true);
-        setState(new BetState(this));
+        setState(new GameOverState(this));
+        updateStrategyObservers(gokStrategyFactory.getGokStrategy(), activeBet, false);
+        updateActionObservers(activePlayer.getUserid() + " did NOT win");
 
     }
 
     public void winGame(){
-        updateStrategyObservers(gokStrategyFactory.getGokStrategy(), activeBet, true);
         gamblerView.disableBetField(false);
         gamblerView.disableStartGameButton(true);
         gamblerView.disableStrategyButtons(true);
         gamblerView.disableThrowDiceButton(true);
         activePlayer.addMoney(activeBet * gokStrategyFactory.getGokStrategy().getMultiplier());
         gamblerView.setWinMessage();
-        setState(new BetState(this));
+        setState(new GameOverState(this));
+        updateStrategyObservers(gokStrategyFactory.getGokStrategy(), activeBet, true);
+        updateActionObservers(activePlayer.getUserid() + " WON");
     }
 
     public int getRollCount(){
@@ -152,11 +159,12 @@ public class GamblerController implements PlayerObserver {
 
     public void setGokStrategy(GokStrategy gokStrategy){
         gokStrategyFactory.setGokStrategy(gokStrategy);
-
+        updateActionObservers("Gokstrategy: " + gokStrategy);
     }
 
     public int rolldice(){
         int roll = (int) (Math.random()*6);
+        updateActionObservers(activePlayer.getUserid() + " rolls a " + roll);
         if (gokStrategyFactory.rollDice(roll)){
             gameOver();
         }
@@ -177,10 +185,20 @@ public class GamblerController implements PlayerObserver {
         strategyObserverArrayList.add(strategyObserver);
     }
 
+    public void addActionObserver(ActionObserver actionObserver){
+        actionObserverArrayList.add(actionObserver);
+    }
+
     public void updateStrategyObservers(GokStrategy gokStrategy, double bet, boolean won){
         for (StrategyObserver so : strategyObserverArrayList) {
             so.updateStrategy(gokStrategy, bet, won);
             System.out.println("updated this first ofc");
+        }
+    }
+
+    public void updateActionObservers(String actionString){
+        for (ActionObserver actionObserver: actionObserverArrayList) {
+            actionObserver.updateAction(actionString);
         }
     }
 
