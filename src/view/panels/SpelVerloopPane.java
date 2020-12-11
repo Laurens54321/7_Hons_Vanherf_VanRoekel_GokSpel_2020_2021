@@ -78,6 +78,4 @@ public class SpelVerloopPane extends BorderPane {
     public void disableStartNewGameButton(Boolean disable){
         startNewGameButton.setDisable(disable);
     }
-
-
 }
