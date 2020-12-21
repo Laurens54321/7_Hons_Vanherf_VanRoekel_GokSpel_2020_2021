@@ -36,7 +36,8 @@ public class TextLoadSavePlayer extends TextLoadSaveTemplate implements LoadSave
             l.add(p.getUserid());
             l.add(p.getMoney());
             writeNextLine(l);
-            closeWriter();
+
         }
+        closeWriter();
     }
 }

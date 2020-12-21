@@ -36,7 +36,14 @@ public class TextLoadSaveTemplate<T> {
             try{
                 scannerFile = new Scanner(file);
             } catch (Exception e) {
-                throw new DomainException("TXTREADER: Error Loading file", e);
+                System.out.println(e);
+                System.out.printf("Creating new file");
+                try {
+                    this.file.createNewFile();
+                } catch (IOException ioException) {
+                    throw new DomainException("TXTREADER: Error Creating new file", e);
+                }
+
             }
         }
     }
@@ -76,15 +83,13 @@ public class TextLoadSaveTemplate<T> {
     public void writeNextLine(ArrayList<T> list) {
         try {
             if (writerFile == null ) writerFile = new PrintWriter(file);
+            String out = "";
             for (T t : list) {
-                writerFile.write(t.toString() + ",");
+                out += t.toString() + ",";
             }
-
-
-        } catch (FileNotFoundException e) {
+            writerFile.println(out);
+        } catch (Exception e) {
             throw new DomainException("TXTREADER: Error reading player file", e);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
