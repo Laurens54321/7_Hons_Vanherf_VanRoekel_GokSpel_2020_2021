@@ -1,5 +1,6 @@
 package controller;
 
+import model.DomainException;
 import model.Player;
 import model.database.PlayerDB;
 import model.gokstrategy.GokStrategy;
@@ -100,7 +101,7 @@ public class GamblerController implements PlayerObserver {
         return false;
     }
 
-    public boolean setActiveBet(int bet){
+    public boolean setActiveBet(double bet){
         if (activePlayer.getMoney() <  bet) return false;
         else {
             this.activeBet = bet;
@@ -114,8 +115,11 @@ public class GamblerController implements PlayerObserver {
         return activeBet;
     }
 
-    public boolean raiseBet(int bet){
+    public boolean raiseBet(double bet) throws DomainException {
         if (activePlayer.getMoney() < bet) return false;
+        if (bet+10 > activeBet || bet == activeBet){
+            throw new DomainException("U mag uw gok maximum verhogen met 10€");
+        }
         else {
             this.activeBet = bet;
             setState(new PlayState(this));

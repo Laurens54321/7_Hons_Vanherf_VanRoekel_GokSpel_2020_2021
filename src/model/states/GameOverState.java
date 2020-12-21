@@ -1,6 +1,7 @@
 package model.states;
 
 import controller.GamblerController;
+import model.DomainException;
 import model.gokstrategy.GokStrategy;
 import model.gokstrategy.RequestGokStrategy;
 
@@ -13,7 +14,7 @@ public class GameOverState implements RequestState {
 
     @Override
     public boolean logIn(String login) {
-        return false;
+        throw new DomainException("You must wait for the Admin to start a new game");
     }
 
     @Override

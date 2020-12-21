@@ -9,6 +9,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.DomainException;
 import model.gokstrategy.GokStrategy;
 
 
@@ -76,7 +77,7 @@ public class GamblerView {
 
 		startGameButton.setText("Start gokspel");
 		try{
-			startGameButton.setOnAction(e -> startGame(Integer.parseInt(betField.getText())));
+			startGameButton.setOnAction(e -> startGame(betField.getText()));
 		} catch (NumberFormatException e){
 
 		}
@@ -153,11 +154,6 @@ public class GamblerView {
 		strategyVbox.setAlignment(Pos.CENTER_LEFT);
 		strategyVbox.setSpacing(10);
 
-
-
-
-		//
-
 		VBox gameVbox = new VBox();
 
 		rollDiceButton = new Button();
@@ -195,24 +191,51 @@ public class GamblerView {
 
 
 
-	private void startGame(int bet){
-		boolean success = gamblerController.getState().startGame(bet);
-		if (!success) moneyStatusLabel.setText("You do not have enough money to do that");
-		else updateActiveBalance();
+	private void startGame(String betString){
+		if (betString == null || betString.isEmpty()) {
+			moneyStatusLabel.setText("Bet amount is empty");
+			betField.setText(String.valueOf(gamblerController.getActiveBet()));
+		}
 
+		int bet = 0;
+		try{
+			bet = Integer.parseInt(betString);
+		} catch (NumberFormatException e){
+			System.out.println(e);
+			System.out.println("Trying double parser");
+			try{
+				bet = (int) Double.parseDouble(betString);
+				System.out.println("Succes");
+			} catch (NumberFormatException e1){
+				System.out.println("Float parser failed \nResetting bet");
+				betField.setText(String.valueOf(gamblerController.getActiveBet()));
+			}
+		}
+
+		try {
+			boolean success = gamblerController.getState().startGame(bet);
+			if (!success){
+				moneyStatusLabel.setText("You are not allowed to do that");
+				betField.setText(String.valueOf(gamblerController.getActiveBet()));
+			}
+			else updateActiveBalance();
+		} catch (DomainException e){
+			moneyStatusLabel.setText(e.getMessage());
+		}
 	}
 
 	private void login(String userid){
-		boolean success = gamblerController.getState().logIn(userid);
-
-		if (success){
-			startGameButton.setDisable(false);
-			disableErrorMessage();
+		try{
+			if (gamblerController.getState().logIn(userid)){
+				startGameButton.setDisable(false);
+				disableErrorMessage();
+			}
+			else{
+				setErrorMessage(userid + " not found in database");
+			}
+		} catch (DomainException e){
+			setErrorMessage(e.getMessage());
 		}
-		else{
-			setErrorMessage(userid + " not found in database");
-		}
-
 	}
 
 	private void rollDice(){
@@ -295,6 +318,10 @@ public class GamblerView {
 
 	public void updateBetfield(){
 		betField.setText(String.valueOf(gamblerController.getActiveBet()));
+	}
+
+	public void setBetField(String s){
+		betField.setText(s);
 	}
 
 	public void disableThrowDiceButton(Boolean disable){
