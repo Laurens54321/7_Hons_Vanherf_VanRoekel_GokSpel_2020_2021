@@ -11,11 +11,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.DomainException;
 import model.gokstrategy.GokStrategy;
+import view.observer.EnabledGokStrategyObserver;
 
 
 import java.util.ArrayList;
 
-public class GamblerView {
+public class GamblerView implements EnabledGokStrategyObserver {
 	GamblerController gamblerController;
 	int activeBalance;
 
@@ -326,5 +327,19 @@ public class GamblerView {
 
 	public void disableThrowDiceButton(Boolean disable){
 		rollDiceButton.setDisable(disable);
+	}
+
+	@Override
+	public void updateGokStrategies(GokStrategy gokStrategies) {
+		switch (gokStrategies){
+			case EASYSTRATEGY: easyStrategyButton.setVisible(gokStrategies.isActive());
+				break;
+			case EVERYTHINGEVENSTRATEGY: allesEvenButton.setVisible(gokStrategies.isActive());
+				break;
+			case SUMIS21STRATEGY: somIs21Button.setVisible(gokStrategies.isActive());
+				break;
+			case HIGHERTHANPREVIOUSSTRATEGY: hogerDanVorigeButton.setVisible(gokStrategies.isActive());
+				break;
+		}
 	}
 }

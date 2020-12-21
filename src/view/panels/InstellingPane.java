@@ -2,11 +2,17 @@ package view.panels;
 
 import controller.InstellingController;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import model.gokstrategy.GokStrategy;
+import view.observer.EnabledGokStrategyObserver;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class InstellingPane extends GridPane {
     VBox layout;
@@ -17,7 +23,7 @@ public class InstellingPane extends GridPane {
     RadioButton textFile;
     RadioButton cvsFile;
 
-    ArrayList<CheckBox> gamblerStrategies = new ArrayList<>();
+    public HashMap<GokStrategy, CheckBox> gamblerStrategies = new HashMap<>();
 
     Button saveButton;
 
@@ -32,7 +38,7 @@ public class InstellingPane extends GridPane {
         fileLabel = new Label();
         fileLabel.setText("Choose file type:");
 
-            HBox fileChoice = new HBox();
+        HBox fileChoice = new HBox();
         fileChoice.setSpacing(10);
 
         HBox gamblerStrategiesBox = new HBox();
@@ -56,10 +62,11 @@ public class InstellingPane extends GridPane {
 
         fileChoice.getChildren().addAll(excelFile,textFile,cvsFile);
 
-        for (int i = 0; i < instellingController.getAllGokStrategies().size(); i++) {
-            gamblerStrategies.add(new CheckBox(instellingController.getAllGokStrategies().get(i)));
+        List<GokStrategy> gokStrategies = instellingController.getAllGokStrategies();
+        for (int i = 0; i < gokStrategies.size(); i++) {
+            gamblerStrategies.put(gokStrategies.get(i), createCheckBox(i));
         }
-        gamblerStrategiesBox.getChildren().addAll(gamblerStrategies);
+        gamblerStrategiesBox.getChildren().addAll(gamblerStrategies.values());
 
         saveButton = new Button();
         saveButton.setText("Save");
@@ -67,6 +74,10 @@ public class InstellingPane extends GridPane {
 
         layout.getChildren().addAll(fileLabel,fileChoice,gamblerStrategiesBox,saveButton);
         this.getChildren().addAll(layout);
+
+        for (GokStrategy g : instellingController.getAllGokStrategies()) {
+            setCheckBox(g, g.isActive());
+        }
     }
 
     public void setSaveLoadController(String s){
@@ -76,4 +87,21 @@ public class InstellingPane extends GridPane {
     public void confirmSaveLoadController(){
         instellingController.setLoader(selectedSaveLoadController);
     }
+
+    public void setGamblerStrategy(GokStrategy gokStrategy){
+        instellingController.updateEnabledGokStrategyObservers(gokStrategy, gamblerStrategies.get(gokStrategy).isSelected());
+    }
+
+    public CheckBox createCheckBox(int index){
+        GokStrategy g =  instellingController.getAllGokStrategies().get(index);
+        CheckBox checkBox = new CheckBox(g.getName());
+        checkBox.setOnAction(event -> setGamblerStrategy(g));
+        return checkBox;
+    }
+
+    private void setCheckBox(GokStrategy gokStrategy, boolean visible){
+        gamblerStrategies.get(gokStrategy).setSelected(visible);
+    }
+
+
 }

@@ -2,21 +2,23 @@ package model.gokstrategy;
 
 
 public enum GokStrategy {
-    EASYSTRATEGY("Easy Strategy","winst is 2x inzet", "EasyStrategy", 2),
-    EVERYTHINGEVENSTRATEGY("Everything even","Mogelijke winst is je inzet x 4", "EverythingEvenStrategy" , 4),
-    SUMIS21STRATEGY("Sum is 21","Mogelijke winst is je inzet x 5", "SumIs21Strategy", 5),
-    HIGHERTHANPREVIOUSSTRATEGY("Higher Then Previous","Mogelijke winst is je inzet x 10", "HigherThanPreviousStrategy", 10);
+    EASYSTRATEGY("Easy Strategy","EasyStrategy", 2),
+    EVERYTHINGEVENSTRATEGY("Everything even","EverythingEvenStrategy" , 4),
+    SUMIS21STRATEGY("Sum is 21","SumIs21Strategy", 5),
+    HIGHERTHANPREVIOUSSTRATEGY("Higher Then Previous", "HigherThanPreviousStrategy", 10);
 
     private final String name;
     private final String description;
     private final String strategyClass;
     private final int multiplier;
+    private boolean active;
 
-    GokStrategy(String name, String s, String strategyClass, int multiplier) {
+    GokStrategy(String name, String strategyClass, int multiplier) {
         this.name = name;
-        this.description = s;
+        this.description = "Mogelijke winst is je inzet x " + multiplier ;
         this.strategyClass = strategyClass;
         this.multiplier = multiplier;
+        setActive(true);
     }
 
     public String getName(){
@@ -36,4 +38,12 @@ public enum GokStrategy {
     }
 
 
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
 }

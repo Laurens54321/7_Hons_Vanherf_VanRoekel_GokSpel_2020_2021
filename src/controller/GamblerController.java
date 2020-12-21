@@ -7,6 +7,7 @@ import model.gokstrategy.GokStrategy;
 import model.gokstrategy.GokStrategyFactory;
 import model.gokstrategy.RequestGokStrategy;
 import model.states.*;
+import view.GamblerView;
 import view.observer.ActionObserver;
 import view.observer.PlayerObserver;
 import view.observer.StrategyObserver;
@@ -206,6 +207,9 @@ public class GamblerController implements PlayerObserver {
         }
     }
 
+    public GamblerView getGamblerView() {
+        return gamblerView;
+    }
 
     @Override
     public void updatePlayers() {
