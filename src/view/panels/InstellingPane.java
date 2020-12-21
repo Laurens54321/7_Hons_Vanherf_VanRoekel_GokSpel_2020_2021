@@ -18,14 +18,15 @@ public class InstellingPane extends GridPane {
     RadioButton textFile;
     Button saveButton;
 
-    public InstellingPane(){
-        layout = new VBox();
-        layout.setSpacing(10);
 
-        fileLabel.setText("Choose file type:");
-
-        HBox fileChoice = new HBox();
     public InstellingPane(InstellingController instellingController){
+            layout = new VBox();
+            layout.setSpacing(10);
+
+            fileLabel.setText("Choose file type:");
+
+            HBox fileChoice = new HBox();
+
         this.instellingController = instellingController;
 
         ToggleGroup radioGroup = new ToggleGroup();
