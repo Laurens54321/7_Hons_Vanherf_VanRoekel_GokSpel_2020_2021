@@ -58,7 +58,6 @@ public class SpelVerloopPane extends BorderPane {
     }
 
     public void updateLog(ArrayList<String> logList){
-        System.out.println("something happened");
         actionLogVbox.getChildren().clear();
         for (String s : logList) {
             actionLogLabels.clear();
