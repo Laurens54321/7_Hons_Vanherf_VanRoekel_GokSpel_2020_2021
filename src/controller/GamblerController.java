@@ -212,7 +212,7 @@ public class GamblerController implements PlayerObserver {
         gamblerView.updateActiveBalance();
     }
 
-
-
-
+    public PlayerDB getPlayerDB() {
+        return playerDB;
+    }
 }

@@ -12,7 +12,7 @@ public class AdminMainController {
 
     private SpelVerloopController spelVerloopController;
     private GamblerOverviewController gamblerOverviewController;
-    private InstellingPane instellingPane;
+    private InstellingController instellingController;
     private StatistiekController statistiekController;
 
 
@@ -27,12 +27,12 @@ public class AdminMainController {
 
         spelVerloopController = new SpelVerloopController(gamblerController);
         gamblerOverviewController = new GamblerOverviewController(playerDB);
-        instellingPane = new InstellingPane();
+        instellingController = new InstellingController(gamblerController);
         statistiekController = new StatistiekController(gamblerController);
 
         Tab spelVerloopTab = new Tab("Spelverloop", spelVerloopController.getSpelVerloopPane());
         Tab spelerTab = new Tab("Spelers", gamblerOverviewController.getGamblerOverviewPane());
-        Tab instellingTab = new Tab("Instellingen", instellingPane);
+        Tab instellingTab = new Tab("Instellingen", instellingController.getInstellingPane());
         Tab statistiekTab = new Tab("Statistieken", statistiekController.getStatistiekPane());
 
         adminMainPane.addTab(spelVerloopTab);

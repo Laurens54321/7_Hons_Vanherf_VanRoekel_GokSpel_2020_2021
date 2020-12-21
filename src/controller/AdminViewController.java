@@ -22,7 +22,6 @@ public class AdminViewController {
         adminView = new AdminView(this);
         adminMainController = new AdminMainController(this, playerDB, gamblerController);
         adminView.setAdminPane(adminMainController.getAdminMainPane());
-
     }
 
     public GamblerController getGamblerController() {

@@ -18,7 +18,6 @@ public class PlayerDB {
     private Collection<PlayerObserver> observers = new ArrayList<>();
 
     public PlayerDB(){
-
         DB = new HashMap<>();
     }
 
@@ -77,5 +76,12 @@ public class PlayerDB {
 
     public void save(){
         saveStrategy.save(getPlayers());
+    }
+
+    public void setSaveStrategy(LoadSaveStrategy saveStrategy) {
+        save();
+        if (saveStrategy.getClass().equals(this.getClass())) return;
+        this.saveStrategy = saveStrategy;
+        save();
     }
 }
