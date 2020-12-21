@@ -1,13 +1,12 @@
 package view.panels;
 
 import controller.InstellingController;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.util.ArrayList;
 
 public class InstellingPane extends GridPane {
     VBox layout;
@@ -16,19 +15,28 @@ public class InstellingPane extends GridPane {
 
     RadioButton excelFile;
     RadioButton textFile;
+    RadioButton cvsFile;
+
+    ArrayList<CheckBox> gamblerStrategies = new ArrayList<>();
+
     Button saveButton;
 
     String selectedSaveLoadController = null;
 
 
     public InstellingPane(InstellingController instellingController){
+
         layout = new VBox();
         layout.setSpacing(10);
 
         fileLabel = new Label();
         fileLabel.setText("Choose file type:");
 
-        HBox fileChoice = new HBox();
+            HBox fileChoice = new HBox();
+        fileChoice.setSpacing(10);
+
+        HBox gamblerStrategiesBox = new HBox();
+        gamblerStrategiesBox.setSpacing(10);
 
         this.instellingController = instellingController;
 
@@ -42,13 +50,22 @@ public class InstellingPane extends GridPane {
         textFile.setToggleGroup(radioGroup);
         textFile.setOnAction(e -> setSaveLoadController("text"));
 
-        fileChoice.getChildren().addAll(excelFile,textFile);
+        cvsFile = new RadioButton( "Data in Excel file");
+        cvsFile.setToggleGroup(radioGroup);
+        cvsFile.setOnAction(event -> setSaveLoadController("cvs"));
+
+        fileChoice.getChildren().addAll(excelFile,textFile,cvsFile);
+
+        for (int i = 0; i < instellingController.getAllGokStrategies().size(); i++) {
+            gamblerStrategies.add(new CheckBox(instellingController.getAllGokStrategies().get(i)));
+        }
+        gamblerStrategiesBox.getChildren().addAll(gamblerStrategies);
 
         saveButton = new Button();
         saveButton.setText("Save");
         saveButton.setOnAction(event -> confirmSaveLoadController());
 
-        layout.getChildren().addAll(fileLabel,fileChoice,saveButton);
+        layout.getChildren().addAll(fileLabel,fileChoice,gamblerStrategiesBox,saveButton);
         this.getChildren().addAll(layout);
     }
 
