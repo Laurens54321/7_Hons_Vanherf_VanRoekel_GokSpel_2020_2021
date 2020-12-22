@@ -1,6 +1,7 @@
 package view.panels;
 
 import controller.InstellingController;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -43,10 +44,11 @@ public class InstellingPane extends GridPane {
 
         HBox strategiesBox = new HBox();
         strategiesBox.setSpacing(10);
+        strategiesBox.setPadding(new Insets(10));
 
 
         VBox gamblerStrategiesButtonsBox = new VBox();
-        gamblerStrategiesButtonsBox.setSpacing(20);
+        gamblerStrategiesButtonsBox.setSpacing(17);
 
         VBox gamblerStrategiesTextfieldBox = new VBox();
         gamblerStrategiesTextfieldBox.setSpacing(10);
@@ -72,12 +74,19 @@ public class InstellingPane extends GridPane {
         List<GokStrategy> gokStrategies = instellingController.getAllGokStrategies();
         List<TextField> strategyMultiplierFields = new ArrayList<>();
 
+
         for (int i = 0; i < gokStrategies.size(); i++) {
             gamblerStrategies.put(gokStrategies.get(i), createCheckBox(i));
             strategyMultiplierFields.add(new TextField(String.valueOf(gokStrategies.get(i).getMultiplier())));
         }
-
+        Label strategyTitleLabel = new Label();
+        strategyTitleLabel.setText("Strategies");
+        gamblerStrategiesButtonsBox.getChildren().addAll(strategyTitleLabel);
         gamblerStrategiesButtonsBox.getChildren().addAll(gamblerStrategies.values());
+
+        Label multiplierTitleLabel = new Label();
+        multiplierTitleLabel.setText("Multiplier");
+        gamblerStrategiesTextfieldBox.getChildren().addAll(multiplierTitleLabel);
         gamblerStrategiesTextfieldBox.getChildren().addAll(strategyMultiplierFields);
 
         strategiesBox.getChildren().addAll(gamblerStrategiesButtonsBox,gamblerStrategiesTextfieldBox);
