@@ -85,6 +85,7 @@ public class GamblerController implements PlayerObserver, EnabledGokStrategyObse
         }
         if (state.getClass() == GameOverState.class){
             updateGameObservers();
+            playerDB.updateMoneyObservers();
         }
         this.state = state;
     }

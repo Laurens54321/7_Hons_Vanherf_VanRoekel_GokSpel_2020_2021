@@ -14,6 +14,7 @@ public class GamblerOverviewController implements PlayerObserver {
 
     public GamblerOverviewController(PlayerDB playerDB){
         this.playerDB = playerDB;
+        playerDB.addObserver(this);
         gamblerOverviewPane = new GamblerOverviewPane(this);
     }
 
