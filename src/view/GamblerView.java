@@ -107,7 +107,7 @@ public class GamblerView {
 		ToggleGroup radioGroup = new ToggleGroup();
 		HBox strategies = new HBox();
 
-		easyStrategyButton = new RadioButton( "ez katka");
+		easyStrategyButton = new RadioButton( "Easy strategy");
 		easyStrategyButton.setToggleGroup(radioGroup);
 		easyStrategyButton.setOnAction(e -> setEasyStrategy());
 		easyStrategyButton.setDisable(true);
@@ -274,7 +274,7 @@ public class GamblerView {
 	public void setLoseMessage(boolean enable){
 		if (enable) {
 			gamblerController.updatePlayers();
-			endOfGameLabel.setText("HELAAS, JE HEBT NIET GEWONNEN SUKKEL \nJe nieuwe goksaldo bedraagt " + activeBalance );
+			endOfGameLabel.setText("HELAAS, JE HEBT NIET GEWONNEN \nJe nieuwe goksaldo bedraagt " + activeBalance );
 			endOfGameLabel.setBackground(new Background(new BackgroundFill(Color.RED,null,null)));
 
 		}
@@ -285,7 +285,7 @@ public class GamblerView {
 
 	public void setWinMessage(){
 		gamblerController.updatePlayers();
-		endOfGameLabel.setText("HOERA, JE HEBT GEWONNEN SUKKEL \nJe nieuwe goksaldo bedraagt " + activeBalance );
+		endOfGameLabel.setText("HOERA, JE HEBT GEWONNEN \nJe nieuwe goksaldo bedraagt " + activeBalance );
 		endOfGameLabel.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN,null,null)));
 	}
 
