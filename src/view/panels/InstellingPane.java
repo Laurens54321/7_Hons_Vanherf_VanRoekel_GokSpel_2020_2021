@@ -48,7 +48,7 @@ public class InstellingPane extends GridPane {
 
 
         VBox gamblerStrategiesButtonsBox = new VBox();
-        gamblerStrategiesButtonsBox.setSpacing(17);
+        gamblerStrategiesButtonsBox.setSpacing(16);
 
         VBox gamblerStrategiesTextfieldBox = new VBox();
         gamblerStrategiesTextfieldBox.setSpacing(10);
