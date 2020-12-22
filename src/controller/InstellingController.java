@@ -22,14 +22,16 @@ public class InstellingController {
 
 
     public InstellingController(GamblerController gamblerController){
-        instellingPane = new InstellingPane(this);
+
         this.gamblerController = gamblerController;
         gamblerController.setInstellingController(this);
 
-        gokStrategyObservers.add(gamblerController.getGamblerView());
-
         textLoadSaveSetting = new TextLoadSaveSetting(this);
-        textLoadSaveSetting.load();
+        gokStrategyObservers.add(gamblerController);
+        updateEnabledGokStrategyObservers();
+
+        instellingPane = new InstellingPane(this);
+
     }
 
     public InstellingPane getInstellingPane() {
@@ -59,6 +61,7 @@ public class InstellingController {
         for (EnabledGokStrategyObserver obs : gokStrategyObservers) {
             obs.updateGokStrategies();
         }
+        saveSettings();
     }
 
     public void setSaveStrategy(String saveStrategy){
@@ -72,7 +75,11 @@ public class InstellingController {
     public void setGokStrategyMultipliers(HashMap<String, Integer> gokStrategyMultipliers){
         for (String s : gokStrategyMultipliers.keySet()) {
             for (GokStrategy gokStrategy : GokStrategy.values()) {
-                if (gokStrategy.getName().equals(s)) gokStrategy.setMultiplier(gokStrategyMultipliers.get(s));
+                if (gokStrategy.getName().equals(s)){
+                    gokStrategy.setMultiplier(gokStrategyMultipliers.get(s));
+                    System.out.println("Modified a multiplier from save");
+                }
+
             }
         }
     }
@@ -87,5 +94,9 @@ public class InstellingController {
 
     public void saveSettings() {
         textLoadSaveSetting.save();
+    }
+
+    public void loadSettings(){
+        textLoadSaveSetting.load();
     }
 }

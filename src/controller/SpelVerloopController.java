@@ -30,6 +30,7 @@ public class SpelVerloopController implements ActionObserver, GameObserver {
 
         this.gamblerController = gamblerController;
         gamblerController.addActionObserver(this);
+        gamblerController.addGameObserver(this);
     }
 
     public SpelVerloopPane getSpelVerloopPane() {

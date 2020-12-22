@@ -167,7 +167,7 @@ public class GamblerView {
 
 		dicerollLabels = new ArrayList<>();
 
-		for (int i = 1; i < 5; i++) {
+		for (int i = 0; i < 5; i++) {
 			Label worp = new Label();
 			dicerollLabels.add(worp);
 		}
@@ -243,8 +243,11 @@ public class GamblerView {
 	private void rollDice(){
 		int roll = gamblerController.getState().throwDice();
 		if (roll < 0) return;
-		int rollCount = gamblerController.getRollCount();
-		dicerollLabels.get(rollCount-1).setText("Roll " + rollCount + ": " + roll);
+
+	}
+
+	public void addRoll(int roll, int rollCount){
+		dicerollLabels.get(rollCount).setText("Roll " + (rollCount+1) + ": " + roll);
 	}
 
 	public void updateActiveBalance(){
@@ -306,6 +309,7 @@ public class GamblerView {
 	}
 
 	private void confirmStrategyChoice(){
+		if (gokStrategy == null) return;
 		gamblerController.getState().selectStrategy(gokStrategy);
 	}
 
@@ -315,7 +319,6 @@ public class GamblerView {
 		somIs21Button.setDisable(disable);
 		hogerDanVorigeButton.setDisable(disable);
 		confirmChoiceButton.setDisable(disable);
-
 	}
 
 	public void updateBetfield(){
@@ -351,5 +354,11 @@ public class GamblerView {
 			labels.add(new Label(gokStrategy.getDescription()));
 		}
 		rblabels.getChildren().addAll(labels);
+	}
+
+	public void clearThrowLogs(){
+		for (Label label : dicerollLabels) {
+			label.setText("");
+		}
 	}
 }

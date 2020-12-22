@@ -2,13 +2,21 @@ package model.gokstrategy;
 
 
 public class GokStrategyFactory {
+    private static GokStrategyFactory uniqueInstance;
 
     private RequestGokStrategy gokStrategy = new EverythingEvenStrategy();
     private GokStrategy currentgokStrategy;
     public boolean isGameOver;
 
-    public void GokStrategyFactory(){
+    private void GokStrategyFactory(){
 
+    }
+
+    public static GokStrategyFactory getInstance() {
+        if (uniqueInstance == null) {
+            uniqueInstance = new GokStrategyFactory();
+        }
+        return uniqueInstance;
     }
 
     public boolean rollDice(int roll){

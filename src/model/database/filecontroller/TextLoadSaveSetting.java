@@ -15,12 +15,12 @@ public class TextLoadSaveSetting extends TextLoadSaveTemplate {
         super();
         setFile(settingFile);
         this.instellingController = instellingController;
+        load();
     }
 
     public void load(){
         TextLoadSaveTemplate textLoader = new TextLoadSaveTemplate(settingFile);
         try {
-
             String loadSaveStrategy = ((ArrayList<String>) textLoader.readLine()).get(1);
             if (loadSaveStrategy == null || loadSaveStrategy.isEmpty())
                 System.out.println("No loadSaveStrategy found, using default excelLoader");
@@ -31,7 +31,7 @@ public class TextLoadSaveSetting extends TextLoadSaveTemplate {
 
         try{
             HashMap<String, Integer> gokStrategyMultipliers = new HashMap<>();
-            while(textLoader.hasNextLine()){
+            while (textLoader.hasNextLine()){
                 ArrayList<String> var = (ArrayList<String>) textLoader.readLine();
                 if (var.get(1) != null && !var.get(1).isEmpty()) gokStrategyMultipliers.put(var.get(0), Integer.valueOf(var.get(1)));
             }

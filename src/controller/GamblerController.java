@@ -8,10 +8,7 @@ import model.gokstrategy.GokStrategyFactory;
 import model.gokstrategy.RequestGokStrategy;
 import model.states.*;
 import view.GamblerView;
-import view.observer.ActionObserver;
-import view.observer.EnabledGokStrategyObserver;
-import view.observer.PlayerObserver;
-import view.observer.StrategyObserver;
+import view.observer.*;
 
 import javax.security.auth.login.LoginContext;
 import javax.swing.*;
@@ -27,7 +24,8 @@ public class GamblerController implements PlayerObserver, EnabledGokStrategyObse
     private InstellingController instellingController;
 
     private ArrayList<StrategyObserver> strategyObserverArrayList;
-    private ArrayList<ActionObserver>actionObserverArrayList;
+    private ArrayList<ActionObserver> actionObserverArrayList;
+    private ArrayList<GameObserver> gameObservers;
 
     private PlayerDB playerDB;
     private Player activePlayer;
@@ -39,9 +37,10 @@ public class GamblerController implements PlayerObserver, EnabledGokStrategyObse
     public GamblerController(PlayerDB playerDB) {
         gamblerView = new view.GamblerView(this);
         this.playerDB = playerDB;
-        gokStrategyFactory = new GokStrategyFactory();
+        gokStrategyFactory = GokStrategyFactory.getInstance();
         strategyObserverArrayList = new ArrayList<>();
         actionObserverArrayList = new ArrayList<>();
+        gameObservers = new ArrayList<>();
         setState(new LogInState(this));
 
     }
@@ -50,6 +49,7 @@ public class GamblerController implements PlayerObserver, EnabledGokStrategyObse
 
         if (state.getClass() == LogInState.class){
             playerDB.updateMoneyObservers();
+            gamblerView.clearThrowLogs();
             gamblerView.disableBetField(true);
             gamblerView.disableStartGameButton(true);
             gamblerView.disableStrategyButtons(true);
@@ -82,6 +82,9 @@ public class GamblerController implements PlayerObserver, EnabledGokStrategyObse
             gamblerView.disableStartGameButton(false);
             gamblerView.disableStrategyButtons(true);
             gamblerView.disableThrowDiceButton(false);
+        }
+        if (state.getClass() == GameOverState.class){
+            updateGameObservers();
         }
         this.state = state;
     }
@@ -171,13 +174,13 @@ public class GamblerController implements PlayerObserver, EnabledGokStrategyObse
     }
 
     public int rolldice(){
-        int roll = (int) (Math.random()*6);
+        int roll = (int) Math.floor((Math.random()*6)) + 1;
+        gamblerView.addRoll(roll, rollCount);
         updateActionObservers(activePlayer.getUserid() + " rolls a " + roll);
         if (gokStrategyFactory.rollDice(roll)){
             gameOver();
         }
         else rollCount += 1;
-
         if (isGameOver()) return -1;
         if (getRollCount() == 1) setState(new SecondThrowState(this));
         if (getRollCount() == 4) winGame();
@@ -200,7 +203,6 @@ public class GamblerController implements PlayerObserver, EnabledGokStrategyObse
     public void updateStrategyObservers(GokStrategy gokStrategy, double bet, boolean won){
         for (StrategyObserver so : strategyObserverArrayList) {
             so.updateStrategy(gokStrategy, bet, won);
-            System.out.println("updated this first ofc");
         }
     }
 
@@ -212,6 +214,16 @@ public class GamblerController implements PlayerObserver, EnabledGokStrategyObse
 
     public GamblerView getGamblerView() {
         return gamblerView;
+    }
+
+    public void addGameObserver(GameObserver gameObserver){
+        gameObservers.add(gameObserver);
+    }
+
+    public void updateGameObservers(){
+        for (GameObserver gameObserver : gameObservers) {
+            gameObserver.observerNewGame();
+        }
     }
 
     @Override
@@ -231,4 +243,6 @@ public class GamblerController implements PlayerObserver, EnabledGokStrategyObse
     public void updateGokStrategies() {
         gamblerView.updateGokStrategies();
     }
+
+
 }
