@@ -107,7 +107,7 @@ public class GamblerView {
 		ToggleGroup radioGroup = new ToggleGroup();
 		HBox strategies = new HBox();
 
-		easyStrategyButton = new RadioButton( "Easy strategy");
+		easyStrategyButton = new RadioButton( "Guaranteed win");
 		easyStrategyButton.setToggleGroup(radioGroup);
 		easyStrategyButton.setOnAction(e -> setEasyStrategy());
 		easyStrategyButton.setDisable(true);
