@@ -48,11 +48,10 @@ public class InstellingPane extends GridPane {
 
         HBox strategiesBox = new HBox();
         strategiesBox.setSpacing(10);
-        strategiesBox.setPadding(new Insets(10));
 
 
         gamblerStrategiesButtonsBox = new VBox();
-        gamblerStrategiesButtonsBox.setSpacing(17);
+        gamblerStrategiesButtonsBox.setSpacing(16);
 
         gamblerStrategiesTextfieldBox = new VBox();
         gamblerStrategiesTextfieldBox.setSpacing(10);
@@ -64,6 +63,7 @@ public class InstellingPane extends GridPane {
         excelFile = new RadioButton( "Data in Excel file");
         excelFile.setToggleGroup(radioGroup);
         excelFile.setOnAction(e -> setSaveLoadController("excel"));
+        excelFile.setSelected(true);
 
         textFile = new RadioButton("Data in tekstfile");
         textFile.setToggleGroup(radioGroup);
@@ -100,6 +100,8 @@ public class InstellingPane extends GridPane {
         saveButton.setOnAction(event -> confirmSaveLoadController());
 
         layout.getChildren().addAll(fileLabel,fileChoice,strategiesBox,saveButton);
+        layout.setPadding(new Insets(10));
+
         this.getChildren().addAll(layout);
 
         for (GokStrategy g : instellingController.getAllGokStrategies()) {
