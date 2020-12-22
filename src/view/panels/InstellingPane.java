@@ -12,6 +12,7 @@ import model.gokstrategy.GokStrategy;
 import view.observer.EnabledGokStrategyObserver;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,7 +25,10 @@ public class InstellingPane extends GridPane {
     RadioButton textFile;
     RadioButton cvsFile;
 
-    public HashMap<GokStrategy, CheckBox> gamblerStrategies = new HashMap<>();
+    VBox gamblerStrategiesButtonsBox;
+    VBox gamblerStrategiesTextfieldBox;
+
+    public EnumMap<GokStrategy, CheckBox> gamblerStrategies = new EnumMap<>(GokStrategy.class);
 
     Button saveButton;
 
@@ -47,10 +51,10 @@ public class InstellingPane extends GridPane {
         strategiesBox.setPadding(new Insets(10));
 
 
-        VBox gamblerStrategiesButtonsBox = new VBox();
+        gamblerStrategiesButtonsBox = new VBox();
         gamblerStrategiesButtonsBox.setSpacing(17);
 
-        VBox gamblerStrategiesTextfieldBox = new VBox();
+        gamblerStrategiesTextfieldBox = new VBox();
         gamblerStrategiesTextfieldBox.setSpacing(10);
 
         this.instellingController = instellingController;
@@ -77,7 +81,7 @@ public class InstellingPane extends GridPane {
 
         for (int i = 0; i < gokStrategies.size(); i++) {
             gamblerStrategies.put(gokStrategies.get(i), createCheckBox(i));
-            strategyMultiplierFields.add(new TextField(String.valueOf(gokStrategies.get(i).getMultiplier())));
+            strategyMultiplierFields.add(createTextField(i));
         }
         Label strategyTitleLabel = new Label();
         strategyTitleLabel.setText("Strategies");
@@ -101,6 +105,8 @@ public class InstellingPane extends GridPane {
         for (GokStrategy g : instellingController.getAllGokStrategies()) {
             setCheckBox(g, g.isActive());
         }
+
+
     }
 
     public void setSaveLoadController(String s){
@@ -116,11 +122,23 @@ public class InstellingPane extends GridPane {
         gokStrategy.setActive(gamblerStrategies.get(gokStrategy).isSelected());
     }
 
+    public void setMultiplier(GokStrategy gokStrategy, String multiplier){
+        System.out.println("changed multiplier");
+        gokStrategy.setMultiplier(Integer.parseInt(multiplier));
+    }
+
     public CheckBox createCheckBox(int index){
         GokStrategy g =  instellingController.getAllGokStrategies().get(index);
         CheckBox checkBox = new CheckBox(g.getName());
         checkBox.setOnAction(event -> setGamblerStrategy(g));
         return checkBox;
+    }
+
+    public TextField createTextField(int index){
+        GokStrategy g =  instellingController.getAllGokStrategies().get(index);
+        TextField textField = new TextField(String.valueOf(g.getMultiplier()));
+        textField.setOnAction(event -> setMultiplier(g, textField.getText()));
+        return textField;
     }
 
     private void setCheckBox(GokStrategy gokStrategy, boolean visible){

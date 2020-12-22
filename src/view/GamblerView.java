@@ -15,6 +15,7 @@ import view.observer.EnabledGokStrategyObserver;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GamblerView implements EnabledGokStrategyObserver {
 	GamblerController gamblerController;
@@ -34,6 +35,8 @@ public class GamblerView implements EnabledGokStrategyObserver {
 	RadioButton allesEvenButton;
 	RadioButton somIs21Button;
 	RadioButton hogerDanVorigeButton;
+
+	VBox rblabels;
 
 	Button confirmChoiceButton;
 
@@ -126,18 +129,16 @@ public class GamblerView implements EnabledGokStrategyObserver {
 		hogerDanVorigeButton.setDisable(true);
 
 		VBox rbtnsVbox = new VBox();
-		VBox rblabels = new VBox();
+		rblabels = new VBox();
 
-		Label allesEvenLabel = new Label();
-		allesEvenLabel.setText("mogelijke winst is 4x je inzet");
-		Label somIs21Label = new Label();
-		somIs21Label.setText("mogelijke winst is 5x je inzet");
-		Label hogerDanVorigeLabel = new Label();
-		hogerDanVorigeLabel.setText("mogelijke winst is 10x je inzet");
+		List<Label> labels = new ArrayList<>();
+		for (GokStrategy gokStrategy : GokStrategy.values()){
+			labels.add(new Label(gokStrategy.getDescription()));
+		}
 
-		rbtnsVbox.getChildren().addAll(allesEvenButton, somIs21Button, hogerDanVorigeButton, easyStrategyButton);
+		rbtnsVbox.getChildren().addAll(easyStrategyButton, allesEvenButton, somIs21Button, hogerDanVorigeButton);
 		rbtnsVbox.setSpacing(10);
-		rblabels.getChildren().addAll(allesEvenLabel,somIs21Label,hogerDanVorigeLabel);
+		rblabels.getChildren().addAll(labels);
 		rblabels.setSpacing(10);
 
 		strategies.getChildren().addAll(rbtnsVbox,rblabels);
@@ -343,5 +344,12 @@ public class GamblerView implements EnabledGokStrategyObserver {
 					break;
 			}
 		}
+
+		rblabels.getChildren().clear();
+		List<Label> labels = new ArrayList<>();
+		for (GokStrategy gokStrategy : GokStrategy.values()){
+			labels.add(new Label(gokStrategy.getDescription()));
+		}
+		rblabels.getChildren().addAll(labels);
 	}
 }

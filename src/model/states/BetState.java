@@ -13,8 +13,6 @@ public class BetState implements RequestState {
         System.out.println("Bet State");
     }
 
-
-
     @Override
     public boolean logIn(String login) {
         gamblerController.setState(new BetState(gamblerController));

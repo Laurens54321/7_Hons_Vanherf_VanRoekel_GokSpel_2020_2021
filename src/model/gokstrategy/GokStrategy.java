@@ -10,7 +10,7 @@ public enum GokStrategy {
     HIGHERTHANPREVIOUSSTRATEGY("Higher Then Previous", "HigherThanPreviousStrategy", 10);
 
     private final String name;
-    private final String description;
+    private String description;
     private final String strategyClass;
     private int multiplier;
     private boolean active;
@@ -41,6 +41,7 @@ public enum GokStrategy {
 
     public void setMultiplier(int multiplier){
         if (multiplier < 0) throw new DomainException("Multiplier cannot be lower then 1");
+        description = "Mogelijke winst is je inzet x " + multiplier ;
         this.multiplier = multiplier;
     }
 
