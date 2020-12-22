@@ -41,8 +41,15 @@ public class InstellingPane extends GridPane {
         HBox fileChoice = new HBox();
         fileChoice.setSpacing(10);
 
-        HBox gamblerStrategiesBox = new HBox();
-        gamblerStrategiesBox.setSpacing(10);
+        HBox strategiesBox = new HBox();
+        strategiesBox.setSpacing(10);
+
+
+        VBox gamblerStrategiesButtonsBox = new VBox();
+        gamblerStrategiesButtonsBox.setSpacing(20);
+
+        VBox gamblerStrategiesTextfieldBox = new VBox();
+        gamblerStrategiesTextfieldBox.setSpacing(10);
 
         this.instellingController = instellingController;
 
@@ -63,16 +70,23 @@ public class InstellingPane extends GridPane {
         fileChoice.getChildren().addAll(excelFile,textFile,cvsFile);
 
         List<GokStrategy> gokStrategies = instellingController.getAllGokStrategies();
+        List<TextField> strategyMultiplierFields = new ArrayList<>();
+
         for (int i = 0; i < gokStrategies.size(); i++) {
             gamblerStrategies.put(gokStrategies.get(i), createCheckBox(i));
+            strategyMultiplierFields.add(new TextField(String.valueOf(gokStrategies.get(i).getMultiplier())));
         }
-        gamblerStrategiesBox.getChildren().addAll(gamblerStrategies.values());
+
+        gamblerStrategiesButtonsBox.getChildren().addAll(gamblerStrategies.values());
+        gamblerStrategiesTextfieldBox.getChildren().addAll(strategyMultiplierFields);
+
+        strategiesBox.getChildren().addAll(gamblerStrategiesButtonsBox,gamblerStrategiesTextfieldBox);
 
         saveButton = new Button();
         saveButton.setText("Save");
         saveButton.setOnAction(event -> confirmSaveLoadController());
 
-        layout.getChildren().addAll(fileLabel,fileChoice,gamblerStrategiesBox,saveButton);
+        layout.getChildren().addAll(fileLabel,fileChoice,strategiesBox,saveButton);
         this.getChildren().addAll(layout);
 
         for (GokStrategy g : instellingController.getAllGokStrategies()) {
