@@ -17,7 +17,7 @@ import view.observer.EnabledGokStrategyObserver;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GamblerView implements EnabledGokStrategyObserver {
+public class GamblerView {
 	GamblerController gamblerController;
 	int activeBalance;
 
@@ -330,7 +330,7 @@ public class GamblerView implements EnabledGokStrategyObserver {
 		rollDiceButton.setDisable(disable);
 	}
 
-	@Override
+
 	public void updateGokStrategies() {
 		for (GokStrategy gokStrategy : GokStrategy.values()) {
 			switch (gokStrategy){

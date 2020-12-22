@@ -9,6 +9,7 @@ import model.gokstrategy.RequestGokStrategy;
 import model.states.*;
 import view.GamblerView;
 import view.observer.ActionObserver;
+import view.observer.EnabledGokStrategyObserver;
 import view.observer.PlayerObserver;
 import view.observer.StrategyObserver;
 
@@ -17,7 +18,7 @@ import javax.swing.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class GamblerController implements PlayerObserver {
+public class GamblerController implements PlayerObserver, EnabledGokStrategyObserver {
 
     private RequestState state;
 
@@ -224,5 +225,10 @@ public class GamblerController implements PlayerObserver {
 
     public void setInstellingController(InstellingController instellingController) {
         this.instellingController = instellingController;
+    }
+
+    @Override
+    public void updateGokStrategies() {
+        gamblerView.updateGokStrategies();
     }
 }
