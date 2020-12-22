@@ -330,16 +330,18 @@ public class GamblerView implements EnabledGokStrategyObserver {
 	}
 
 	@Override
-	public void updateGokStrategies(GokStrategy gokStrategies) {
-		switch (gokStrategies){
-			case EASYSTRATEGY: easyStrategyButton.setVisible(gokStrategies.isActive());
-				break;
-			case EVERYTHINGEVENSTRATEGY: allesEvenButton.setVisible(gokStrategies.isActive());
-				break;
-			case SUMIS21STRATEGY: somIs21Button.setVisible(gokStrategies.isActive());
-				break;
-			case HIGHERTHANPREVIOUSSTRATEGY: hogerDanVorigeButton.setVisible(gokStrategies.isActive());
-				break;
+	public void updateGokStrategies() {
+		for (GokStrategy gokStrategy : GokStrategy.values()) {
+			switch (gokStrategy){
+				case EASYSTRATEGY: easyStrategyButton.setVisible(gokStrategy.isActive());
+					break;
+				case EVERYTHINGEVENSTRATEGY: allesEvenButton.setVisible(gokStrategy.isActive());
+					break;
+				case SUMIS21STRATEGY: somIs21Button.setVisible(gokStrategy.isActive());
+					break;
+				case HIGHERTHANPREVIOUSSTRATEGY: hogerDanVorigeButton.setVisible(gokStrategy.isActive());
+					break;
+			}
 		}
 	}
 }

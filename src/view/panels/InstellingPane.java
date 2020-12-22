@@ -56,7 +56,7 @@ public class InstellingPane extends GridPane {
         textFile.setToggleGroup(radioGroup);
         textFile.setOnAction(e -> setSaveLoadController("text"));
 
-        cvsFile = new RadioButton( "Data in Excel file");
+        cvsFile = new RadioButton( "Data in cvs file");
         cvsFile.setToggleGroup(radioGroup);
         cvsFile.setOnAction(event -> setSaveLoadController("cvs"));
 
@@ -86,10 +86,11 @@ public class InstellingPane extends GridPane {
 
     public void confirmSaveLoadController(){
         instellingController.setLoader(selectedSaveLoadController);
+        instellingController.saveSettings();
     }
 
     public void setGamblerStrategy(GokStrategy gokStrategy){
-        instellingController.updateEnabledGokStrategyObservers(gokStrategy, gamblerStrategies.get(gokStrategy).isSelected());
+        gokStrategy.setActive(gamblerStrategies.get(gokStrategy).isSelected());
     }
 
     public CheckBox createCheckBox(int index){

@@ -6,10 +6,10 @@ import model.Player;
 import java.io.File;
 import java.util.ArrayList;
 
-public class TextLoadSavePlayer extends TextLoadSaveTemplate implements LoadSaveStrategy<Player> {
-    File personenFile = new File("src/bestanden/speler.txt");
+public class CSVPlayerLoadSavePlayer extends TextLoadSaveTemplate implements PlayerLoadSaveStrategy<Player> {
+    File personenFile = new File("src/bestanden/speler.csv");
 
-    public TextLoadSavePlayer() {
+    public CSVPlayerLoadSavePlayer() {
         super();
         setFile(personenFile);
     }

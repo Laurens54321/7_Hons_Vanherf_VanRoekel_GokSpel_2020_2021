@@ -1,15 +1,13 @@
 package controller;
 
-import javafx.scene.Node;
-import model.database.filecontroller.ExcelLoadSavePlayer;
-import model.database.filecontroller.TextLoadSavePlayer;
+import model.database.filecontroller.*;
 import model.gokstrategy.GokStrategy;
 import view.observer.EnabledGokStrategyObserver;
 import view.panels.InstellingPane;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 
 public class InstellingController {
@@ -19,12 +17,19 @@ public class InstellingController {
 
     ArrayList<EnabledGokStrategyObserver> gokStrategyObservers = new ArrayList<>();
 
+    TextLoadSaveSetting textLoadSaveSetting;
+    String saveStrategy = "excel";
+
 
     public InstellingController(GamblerController gamblerController){
         instellingPane = new InstellingPane(this);
         this.gamblerController = gamblerController;
+        gamblerController.setInstellingController(this);
 
         gokStrategyObservers.add(gamblerController.getGamblerView());
+
+        textLoadSaveSetting = new TextLoadSaveSetting(this);
+        textLoadSaveSetting.load();
     }
 
     public InstellingPane getInstellingPane() {
@@ -35,10 +40,13 @@ public class InstellingController {
         if (formaat == null || formaat.isEmpty()) return;
         switch (formaat){
             case "excel":
-                gamblerController.getPlayerDB().setSaveStrategy(new ExcelLoadSavePlayer());
+                gamblerController.getPlayerDB().setSaveStrategy(new ExcelPlayerLoadSavePlayer());
                 break;
             case "text":
-                gamblerController.getPlayerDB().setSaveStrategy(new TextLoadSavePlayer());
+                gamblerController.getPlayerDB().setSaveStrategy(new TextPlayerLoadSavePlayer());
+                break;
+            case "csv":
+                gamblerController.getPlayerDB().setSaveStrategy(new CSVPlayerLoadSavePlayer());
                 break;
         }
     }
@@ -47,10 +55,37 @@ public class InstellingController {
         return Arrays.asList(GokStrategy.values());
     }
 
-    public void updateEnabledGokStrategyObservers(GokStrategy gokStrategy, boolean active){
+    public void updateEnabledGokStrategyObservers(){
         for (EnabledGokStrategyObserver obs : gokStrategyObservers) {
-            gokStrategy.setActive(active);
-            obs.updateGokStrategies(gokStrategy);
+            obs.updateGokStrategies();
         }
+    }
+
+    public void setSaveStrategy(String saveStrategy){
+        this.saveStrategy = saveStrategy;
+    }
+
+    public String getSaveStrategy(){
+        return saveStrategy;
+    }
+
+    public void setGokStrategyMultipliers(HashMap<String, Integer> gokStrategyMultipliers){
+        for (String s : gokStrategyMultipliers.keySet()) {
+            for (GokStrategy gokStrategy : GokStrategy.values()) {
+                if (gokStrategy.getName().equals(s)) gokStrategy.setMultiplier(gokStrategyMultipliers.get(s));
+            }
+        }
+    }
+
+    public HashMap<String, Integer> getGokStrategyMultipliers(){
+        HashMap<String, Integer> gokStrategyMultipliers = new HashMap<>();
+        for (GokStrategy gokStrategy : GokStrategy.values()) {
+            gokStrategyMultipliers.put(gokStrategy.getName(), gokStrategy.getMultiplier());
+        }
+        return gokStrategyMultipliers;
+    }
+
+    public void saveSettings() {
+        textLoadSaveSetting.save();
     }
 }

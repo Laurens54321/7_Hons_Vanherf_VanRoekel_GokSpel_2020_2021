@@ -2,8 +2,8 @@ package model.database;
 
 import model.DomainException;
 import model.Player;
-import model.database.filecontroller.ExcelLoadSavePlayer;
-import model.database.filecontroller.LoadSaveStrategy;
+import model.database.filecontroller.ExcelPlayerLoadSavePlayer;
+import model.database.filecontroller.PlayerLoadSaveStrategy;
 import view.observer.PlayerObserver;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 public class PlayerDB {
     private HashMap<String, Player> DB;
-    private LoadSaveStrategy saveStrategy = new ExcelLoadSavePlayer();
+    private PlayerLoadSaveStrategy saveStrategy = new ExcelPlayerLoadSavePlayer();
 
     private Collection<PlayerObserver> observers = new ArrayList<>();
 
@@ -78,7 +78,7 @@ public class PlayerDB {
         saveStrategy.save(getPlayers());
     }
 
-    public void setSaveStrategy(LoadSaveStrategy saveStrategy) {
+    public void setSaveStrategy(PlayerLoadSaveStrategy saveStrategy) {
         save();
         if (saveStrategy.getClass().equals(this.getClass())) return;
         this.saveStrategy = saveStrategy;

@@ -29,7 +29,7 @@ public class BetState implements RequestState {
     @Override
     public boolean startGame(int bet) {
         boolean success = gamblerController.setActiveBet(bet);
-        if(success) gamblerController.setState(new ChooseState(gamblerController));
+        if (success) gamblerController.setState(new ChooseState(gamblerController));
         return success;
     }
 

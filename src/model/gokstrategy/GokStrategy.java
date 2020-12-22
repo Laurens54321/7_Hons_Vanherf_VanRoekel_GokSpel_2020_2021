@@ -1,6 +1,8 @@
 package model.gokstrategy;
 
 
+import model.DomainException;
+
 public enum GokStrategy {
     EASYSTRATEGY("Easy Strategy","EasyStrategy", 2),
     EVERYTHINGEVENSTRATEGY("Everything even","EverythingEvenStrategy" , 4),
@@ -10,7 +12,7 @@ public enum GokStrategy {
     private final String name;
     private final String description;
     private final String strategyClass;
-    private final int multiplier;
+    private int multiplier;
     private boolean active;
 
     GokStrategy(String name, String strategyClass, int multiplier) {
@@ -37,7 +39,10 @@ public enum GokStrategy {
         return multiplier;
     }
 
-
+    public void setMultiplier(int multiplier){
+        if (multiplier < 0) throw new DomainException("Multiplier cannot be lower then 1");
+        this.multiplier = multiplier;
+    }
 
     public void setActive(boolean active) {
         this.active = active;

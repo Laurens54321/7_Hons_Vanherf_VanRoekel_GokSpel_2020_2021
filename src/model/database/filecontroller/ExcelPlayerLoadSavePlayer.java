@@ -1,16 +1,12 @@
 package model.database.filecontroller;
 
 import excel.ExcelPlugin;
-import jdk.nashorn.internal.runtime.regexp.joni.ApplyCaseFoldArg;
-import jxl.read.biff.BiffException;
-import jxl.write.WriteException;
 import model.Player;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class ExcelLoadSavePlayer extends ExcelPlugin implements LoadSaveStrategy {
+public class ExcelPlayerLoadSavePlayer extends ExcelPlugin implements PlayerLoadSaveStrategy {
 
     File personenFile = new File("src/bestanden/speler.xls");
 

@@ -6,5 +6,5 @@ import model.gokstrategy.GokStrategy;
 import java.util.ArrayList;
 
 public interface EnabledGokStrategyObserver {
-    public void updateGokStrategies(GokStrategy gokStrategies);
+    public void updateGokStrategies();
 }

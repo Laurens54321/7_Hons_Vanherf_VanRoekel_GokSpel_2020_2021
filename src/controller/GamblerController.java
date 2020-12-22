@@ -23,6 +23,7 @@ public class GamblerController implements PlayerObserver {
 
     private view.GamblerView gamblerView;
     public GokStrategyFactory gokStrategyFactory;
+    private InstellingController instellingController;
 
     private ArrayList<StrategyObserver> strategyObserverArrayList;
     private ArrayList<ActionObserver>actionObserverArrayList;
@@ -93,6 +94,7 @@ public class GamblerController implements PlayerObserver {
     }
 
     public boolean login(String userid){
+        instellingController.updateEnabledGokStrategyObservers();
         Player p = playerDB.getPlayer(userid);
         if (p != null){
             activePlayer = p;
@@ -218,5 +220,9 @@ public class GamblerController implements PlayerObserver {
 
     public PlayerDB getPlayerDB() {
         return playerDB;
+    }
+
+    public void setInstellingController(InstellingController instellingController) {
+        this.instellingController = instellingController;
     }
 }
